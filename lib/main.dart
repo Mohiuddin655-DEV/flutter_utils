@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/utils/device.dart';
 import 'package:flutter_utils/core/utils/device_config.dart';
+import 'package:flutter_utils/core/utils/size_config.dart';
 import 'package:flutter_utils/core/widgets/responsive_layout.dart';
 import 'package:flutter_utils/presentation/pages/responsive/mobile_body.dart';
 
@@ -28,12 +29,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig config = SizeConfig.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Utils'),
       ),
       body: ResponsiveLayout(
-        config: const ScreenConfig(
+        config: const DeviceConfig(
           mobile: Device(x: 1, y: 1.5),
           tab: Device(x: 1, y: 1),
           laptop: Device(x: 1.5, y: 1),

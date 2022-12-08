@@ -1,34 +1,39 @@
 import 'package:flutter/cupertino.dart';
-
-import 'device_info.dart';
+import 'package:flutter_utils/core/utils/device_config.dart';
 
 class SizeConfig {
-  final double _resMobile = DeviceInfo.mobileX; //320 << 480
-  final double _resPad = DeviceInfo.tabX; //481 << 768
-  final double _resLaptop = DeviceInfo.laptopX; //769 << 1024
-  final double _resDesktop = DeviceInfo.desktopX; //1025 << 1200
-
+  late DeviceConfig mScreenConfig;
   late Size mSize;
-  late double mScreenWidth;
-  late double mScreenHeight;
+  late double mWidth;
+  late double mHeight;
   late double _detectedPixel, _detectedSpace;
-  late bool isMobile, isPad, isLaptop, isDesktop, isTV;
+  late bool isMobile, isTab, isLaptop, isDesktop, isTV;
 
-  SizeConfig(BuildContext context, bool isScreenDetected) {
+  SizeConfig(BuildContext context, bool isScreenDetected, DeviceConfig config) {
     mSize = MediaQuery.of(context).size;
-    mScreenWidth = mSize.width;
-    mScreenHeight = mSize.height;
-    isMobile = mScreenWidth <= _resMobile;
-    isPad = mScreenWidth > _resMobile && mScreenWidth <= _resPad;
-    isLaptop = mScreenWidth > _resPad && mScreenWidth <= _resLaptop;
-    isDesktop = mScreenWidth > _resLaptop && mScreenWidth <= _resDesktop;
-    isTV = mScreenWidth > _resDesktop;
-    _detectedPixel = isScreenDetected ? _suggestedPixel() : mScreenWidth;
-    _detectedSpace = isScreenDetected ? _suggestedSpace() : mScreenWidth;
+    mWidth = mSize.width;
+    mHeight = mSize.height;
+
+    isMobile = config.isMobile(mWidth, mHeight);
+    isTab = config.isTab(mWidth, mHeight);
+    isLaptop = config.isLaptop(mWidth, mHeight);
+    isDesktop = config.isDesktop(mWidth, mHeight);
+    isTV = !(isMobile && isTab && isLaptop && isDesktop);
+    // isMobile = mScreenWidth <= _resMobile;
+    // isPad = mScreenWidth > _resMobile && mScreenWidth <= _resPad;
+    // isLaptop = mScreenWidth > _resPad && mScreenWidth <= _resLaptop;
+    // isDesktop = mScreenWidth > _resLaptop && mScreenWidth <= _resDesktop;
+    // isTV = mScreenWidth > _resDesktop;
+    _detectedPixel = isScreenDetected ? _suggestedPixel() : mWidth;
+    _detectedSpace = isScreenDetected ? _suggestedSpace() : mWidth;
   }
 
-  static SizeConfig of(BuildContext context, {bool isScreenDetected = false}) {
-    return SizeConfig(context, isScreenDetected);
+  static SizeConfig of(
+    BuildContext context, {
+    bool isScreenDetected = false,
+    DeviceConfig config = const DeviceConfig(),
+  }) {
+    return SizeConfig(context, isScreenDetected, config);
   }
 
   double percentageSize(double totalSize, double percentageSize) {
@@ -62,11 +67,11 @@ class SizeConfig {
   }
 
   double percentageWidth(double percentage) {
-    return percentageSize(mScreenWidth, percentage);
+    return percentageSize(mWidth, percentage);
   }
 
   double percentageHeight(double percentage) {
-    return percentageSize(mScreenHeight, percentage);
+    return percentageSize(mHeight, percentage);
   }
 
   double percentageFontSize(double percentage) {
@@ -83,7 +88,7 @@ class SizeConfig {
   }
 
   double percentageSpaceVertical(double percentage) {
-    return percentageSize(mScreenHeight, percentage);
+    return percentageSize(mHeight, percentage);
   }
 
   double dividedSpace(double dividedLength) {
@@ -96,7 +101,7 @@ class SizeConfig {
   }
 
   double dividedSpaceVertical(double dividedLength) {
-    return dividedSize(mScreenHeight, dividedLength);
+    return dividedSize(mHeight, dividedLength);
   }
 
   // TODO: Customize by Screen position
@@ -107,7 +112,7 @@ class SizeConfig {
       return 7;
     } else if (isLaptop) {
       return 6;
-    } else if (isPad) {
+    } else if (isTab) {
       return 5;
     } else {
       return 3.6;
@@ -116,13 +121,13 @@ class SizeConfig {
 
   double _suggestedPixel() {
     if (isTV || isDesktop || isLaptop) {
-      return mScreenHeight;
+      return mHeight;
     } else {
-      return mScreenWidth;
+      return mWidth;
     }
   }
 
   double _suggestedSpace() {
-    return mScreenWidth;
+    return mWidth;
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/device_config.dart';
 
 class ResponsiveLayout extends StatelessWidget {
-  final ScreenConfig config;
+  final DeviceConfig config;
 
   final Widget mobileBody;
   final Widget desktopBody;
@@ -18,7 +18,7 @@ class ResponsiveLayout extends StatelessWidget {
     this.tabBody,
     this.laptopBody,
     this.tvBody,
-    this.config = const ScreenConfig(),
+    this.config = const DeviceConfig(),
   }) : super(key: key);
 
   @override

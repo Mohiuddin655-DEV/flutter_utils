@@ -10,10 +10,10 @@ class Device extends Size {
   }) : super(x, y);
 
   @override
-  double get width => super.width * 100;
+  double get width => super.width > 100 ? super.width : super.width * 100;
 
   @override
-  double get height => super.height * 100;
+  double get height => super.height > 100 ? super.height : super.height * 100;
 
   double rationalWidth(double cx) {
     return cx * aspectRatio;

@@ -1,10 +1,10 @@
-import 'device_info.dart';
 import 'device.dart';
+import 'device_info.dart';
 
-class ScreenConfig {
+class DeviceConfig {
   final Device mobile, tab, laptop, desktop;
 
-  const ScreenConfig({
+  const DeviceConfig({
     this.mobile = const Device(
       x: DeviceInfo.mobileX,
       y: DeviceInfo.mobileY,
@@ -43,9 +43,11 @@ class ScreenConfig {
     return isDevice(desktop, cx, cy);
   }
 
-  bool isDevice(Device device, double cx, double cy){
-    final x = device.aspectRatio;   print('\n${device.name}\t => X : ${x.toStringAsFixed(2)}');
-    final y = device.ratio(cx, cy); print('${device.name}\t => Y : ${y.toStringAsFixed(2)}');
+  bool isDevice(Device device, double cx, double cy) {
+    final x = device.aspectRatio;
+    print('\n${device.name}\t => X : ${x.toStringAsFixed(2)}');
+    final y = device.ratio(cx, cy);
+    print('${device.name}\t => Y : ${y.toStringAsFixed(2)}');
     return x > y;
   }
 }
