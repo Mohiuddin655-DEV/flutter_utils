@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/size_config.dart';
+import 'package:flutter_utils/core/utils/device.dart';
+import 'package:flutter_utils/core/utils/device_config.dart';
+import 'package:flutter_utils/core/widgets/responsive_layout.dart';
+import 'package:flutter_utils/presentation/pages/responsive/mobile_body.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,73 +32,32 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Flutter Utils'),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            TextViewWithAppSizeConfig(),
-            SizedBox(height: 40),
-            TextViewWithoutAppSizeConfig(),
-          ],
+      body: ResponsiveLayout(
+        config: const ScreenConfig(
+          mobile: Device(x: 1, y: 1.5),
+          tab: Device(x: 1, y: 1),
+          laptop: Device(x: 1.5, y: 1),
+          desktop: Device(x: 2.5, y: 1),
         ),
-      ),
-    );
-  }
-}
-
-class TextViewWithAppSizeConfig extends StatelessWidget {
-  const TextViewWithAppSizeConfig({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig config = SizeConfig.of(context);
-    double fontSize = config.fontSize(24.00);
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: config.space(40),
-        vertical: config.space(24),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(config.pixel(24)),
-      ),
-      child: Text(
-        'Font Size : ${fontSize.toStringAsFixed(2)}',
-        style: TextStyle(
-          color: Colors.blue,
-          fontWeight: FontWeight.bold,
-          fontSize: config.fontSize(24),
+        mobileBody: Body(
+          title: 'Mobile Body',
+          color: Colors.deepOrange.shade300,
         ),
-      ),
-    );
-  }
-}
-
-class TextViewWithoutAppSizeConfig extends StatelessWidget {
-  const TextViewWithoutAppSizeConfig({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double fontSize = 24.00;
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 40,
-        vertical: 24,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Text(
-        'Font Size : ${fontSize.toStringAsFixed(2)}',
-        style: TextStyle(
-          color: Colors.blue,
-          fontWeight: FontWeight.bold,
-          fontSize: fontSize,
+        tabBody: Body(
+          title: 'Tab Body',
+          color: Colors.deepPurple.shade300,
+        ),
+        laptopBody: Body(
+          title: 'Laptop Body',
+          color: Colors.blue.shade300,
+        ),
+        desktopBody: Body(
+          title: 'Desktop Body',
+          color: Colors.deepPurple.shade300,
+        ),
+        tvBody: Body(
+          title: 'TV Body',
+          color: Colors.green.shade300,
         ),
       ),
     );

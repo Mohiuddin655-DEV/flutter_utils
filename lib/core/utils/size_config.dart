@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
+import 'device_info.dart';
+
 class SizeConfig {
-  final int _resMobile = 480; //320 << 480
-  final int _resPad = 768; //481 << 768
-  final int _resLaptop = 1024; //769 << 1024
-  final int _resDesktop = 1200; //1025 << 1200
+  final double _resMobile = DeviceInfo.mobileX; //320 << 480
+  final double _resPad = DeviceInfo.tabX; //481 << 768
+  final double _resLaptop = DeviceInfo.laptopX; //769 << 1024
+  final double _resDesktop = DeviceInfo.desktopX; //1025 << 1200
 
   late Size mSize;
   late double mScreenWidth;
@@ -25,8 +27,7 @@ class SizeConfig {
     _detectedSpace = isScreenDetected ? _suggestedSpace() : mScreenWidth;
   }
 
-  static SizeConfig of(BuildContext context,
-      {bool isScreenDetected = false}) {
+  static SizeConfig of(BuildContext context, {bool isScreenDetected = false}) {
     return SizeConfig(context, isScreenDetected);
   }
 
@@ -42,11 +43,7 @@ class SizeConfig {
     return totalSize / dividedLength;
   }
 
-  double fontSize(double initialSize) {
-    final x = initialSize / _screenVariant();
-    final v = x < 0 ? 1.0 : x;
-    return percentageSize(_detectedPixel, v);
-  }
+  double fontSize(double initialSize) => pixel(initialSize);
 
   double pixel(double initialSize, {bool isScreenDetected = false}) {
     final x = initialSize / _screenVariant();
