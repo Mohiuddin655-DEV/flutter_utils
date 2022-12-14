@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/widgets/bottom_navigation_view/bottom_navigation_view.dart';
 import 'package:flutter_utils/presentation/pages/responsive/responsive_page.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ResponsivePage(),
+      home: const BottomNavigationView(),
     );
   }
 }
