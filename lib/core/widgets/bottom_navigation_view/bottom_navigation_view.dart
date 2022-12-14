@@ -5,6 +5,7 @@ import 'sample/dashboard_bottom_navigation.dart';
 
 class BottomNavigationView extends StatefulWidget {
   final Function(BuildContext context, int index) onChanged;
+
   const BottomNavigationView({super.key, required this.onChanged});
 
   @override
@@ -24,8 +25,11 @@ class _BottomNavigationViewState extends State<BottomNavigationView> {
           DashBoardSelectionWidget(selectedId: _selectedId),
           DashBoardBottomNavigation(
             selectedIndex: _selectedId,
-            onChangeIndex: (value){
-              setState(() { _selectedId = value; });
+            onChangeIndex: (value) {
+              setState(() {
+                _selectedId = value;
+                widget.onChanged.call(context, value);
+              });
             },
           )
         ],

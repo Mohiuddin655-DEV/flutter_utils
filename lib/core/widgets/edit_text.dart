@@ -8,6 +8,7 @@ class EditText extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final bool enabled;
   final BorderRadius? borderRadius;
+  final TextEditingController? controller;
 
   const EditText({
     Key? key,
@@ -20,34 +21,30 @@ class EditText extends StatefulWidget {
     this.onChanged,
     this.enabled = true,
     this.borderRadius,
+    this.controller,
   }) : super(key: key);
 
   @override
-  State<EditText> createState() => _EditTextState();
+  State<EditText> createState() =>
+      _EditTextState();
 }
 
 class _EditTextState extends State<EditText> {
-  late TextEditingController controller;
-
-  @override
-  void initState() {
-    controller = TextEditingController(text: widget.initialValue);
-    super.initState();
-  }
-
   @override
   void dispose() {
-    controller.dispose();
+    widget.controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final nullable = widget.initialValue == 'null';
+    widget.controller?.text = !nullable ? widget.initialValue ?? '' : '';
     return Container(
       margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 12),
       child: TextFormField(
         enabled: widget.enabled,
-        controller: controller,
+        controller: widget.controller,
         keyboardType: widget.inputType,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
