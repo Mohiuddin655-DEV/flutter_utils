@@ -2,32 +2,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_utils/core/utils/device_config.dart';
 
 class SizeConfig {
-  late DeviceConfig mScreenConfig;
-  late Size mSize;
-  late double mWidth;
-  late double mHeight;
+  late DeviceConfig deviceConfig;
+  late Size size;
+  late double width;
+  late double height;
   late double _detectedPixel, _detectedSpace;
   late bool isMobile, isTab, isLaptop, isDesktop, isTV;
 
-  SizeConfig(BuildContext context, bool isScreenDetected, DeviceConfig config) {
-    mSize = MediaQuery.of(context).size;
-    mWidth = mSize.width;
-    mHeight = mSize.height;
-    isMobile = mWidth <= config.mobile.width;
-    isTab = mWidth > config.mobile.width && mWidth <= config.tab.width;
-    isLaptop = mWidth > config.tab.width && mWidth <= config.laptop.width;
-    isDesktop = mWidth > config.laptop.width && mWidth <= config.desktop.width;
-    isTV = mWidth > config.desktop.width;
-    _detectedPixel = isScreenDetected ? _suggestedPixel() : mWidth;
-    _detectedSpace = isScreenDetected ? _suggestedSpace() : mWidth;
+  SizeConfig(
+    BuildContext context, [
+    Size? requireSize,
+    bool isScreenDetected = false,
+    DeviceConfig config = const DeviceConfig(),
+  ]) {
+    size = requireSize ?? MediaQuery.of(context).size;
+    width = size.width;
+    height = size.height;
+    isMobile = width <= config.mobile.width;
+    isTab = width > config.mobile.width && width <= config.tab.width;
+    isLaptop = width > config.tab.width && width <= config.laptop.width;
+    isDesktop = width > config.laptop.width && width <= config.desktop.width;
+    isTV = width > config.desktop.width;
+    _detectedPixel = isScreenDetected ? _suggestedPixel() : width;
+    _detectedSpace = isScreenDetected ? _suggestedSpace() : width;
   }
 
   static SizeConfig of(
     BuildContext context, {
     bool isScreenDetected = false,
     DeviceConfig config = const DeviceConfig(),
+    Size? size,
   }) {
-    return SizeConfig(context, isScreenDetected, config);
+    return SizeConfig(context, size, isScreenDetected, config);
   }
 
   double percentageSize(double totalSize, double percentageSize) {
@@ -61,11 +67,11 @@ class SizeConfig {
   }
 
   double percentageWidth(double percentage) {
-    return percentageSize(mWidth, percentage);
+    return percentageSize(width, percentage);
   }
 
   double percentageHeight(double percentage) {
-    return percentageSize(mHeight, percentage);
+    return percentageSize(height, percentage);
   }
 
   double percentageFontSize(double percentage) {
@@ -82,7 +88,7 @@ class SizeConfig {
   }
 
   double percentageSpaceVertical(double percentage) {
-    return percentageSize(mHeight, percentage);
+    return percentageSize(height, percentage);
   }
 
   double dividedSpace(double dividedLength) {
@@ -95,7 +101,7 @@ class SizeConfig {
   }
 
   double dividedSpaceVertical(double dividedLength) {
-    return dividedSize(mHeight, dividedLength);
+    return dividedSize(height, dividedLength);
   }
 
   // TODO: Customize by Screen position
@@ -115,13 +121,13 @@ class SizeConfig {
 
   double _suggestedPixel() {
     if (isTV || isDesktop || isLaptop) {
-      return mHeight;
+      return height;
     } else {
-      return mWidth;
+      return width;
     }
   }
 
   double _suggestedSpace() {
-    return mWidth;
+    return width;
   }
 }

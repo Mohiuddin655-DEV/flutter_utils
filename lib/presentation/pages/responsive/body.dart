@@ -2,27 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/widgets/responsive_body.dart';
 
 class Body extends StatelessWidget {
+  final int flex;
   final String title;
   final Color color;
-  final double width, height;
 
   const Body({
     Key? key,
+    this.flex = 1,
     required this.title,
     this.color = Colors.white,
-    this.width = double.infinity,
-    this.height = double.infinity,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveBody(
+      flex: flex,
       background: color,
       builder: (context, config) {
+        print(config.size);
         return Center(
           child: Container(
-            width: width,
-            height: height,
             color: Colors.black.withOpacity(0.25),
             child: Center(
               child: Container(
