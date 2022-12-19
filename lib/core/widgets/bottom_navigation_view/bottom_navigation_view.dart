@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/widgets/bottom_navigation_view/bottom_navigation_button.dart';
 
-import 'sample/a.dart';
-import 'sample/dashboard_bottom_navigation.dart';
+import 'sample/bottom_navigation_body.dart';
+import 'sample/bottom_navigation_buttons.dart';
 
 class BottomNavigationView extends StatefulWidget {
-  final Function(BuildContext context, int index) onChanged;
+  final Widget? body;
+  final List<BottomNavigationButton> buttons;
+  final Function(BuildContext context, int index) builder;
 
-  const BottomNavigationView({super.key, required this.onChanged});
+  const BottomNavigationView({
+    super.key,
+    this.body,
+    required this.buttons,
+    required this.builder,
+  });
 
   @override
   State<BottomNavigationView> createState() => _BottomNavigationViewState();
@@ -14,7 +22,7 @@ class BottomNavigationView extends StatefulWidget {
 
 class _BottomNavigationViewState extends State<BottomNavigationView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-  var _selectedId = 0;
+  var _index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +30,17 @@ class _BottomNavigationViewState extends State<BottomNavigationView> {
       key: scaffoldKey,
       body: Column(
         children: [
-          DashBoardSelectionWidget(selectedId: _selectedId),
-          DashBoardBottomNavigation(
-            selectedIndex: _selectedId,
-            onChangeIndex: (value) {
+          BottomNavigationBody(
+            index: _index,
+            child: widget.body,
+          ),
+          BottomNavigationButtons(
+            index: _index,
+            children: widget.buttons,
+            onChanged: (value) {
               setState(() {
-                _selectedId = value;
-                widget.onChanged.call(context, value);
+                _index = value;
+                widget.builder.call(context, value);
               });
             },
           )

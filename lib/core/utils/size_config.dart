@@ -13,17 +13,11 @@ class SizeConfig {
     mSize = MediaQuery.of(context).size;
     mWidth = mSize.width;
     mHeight = mSize.height;
-
-    isMobile = config.isMobile(mWidth, mHeight);
-    isTab = config.isTab(mWidth, mHeight);
-    isLaptop = config.isLaptop(mWidth, mHeight);
-    isDesktop = config.isDesktop(mWidth, mHeight);
-    isTV = !(isMobile && isTab && isLaptop && isDesktop);
-    // isMobile = mScreenWidth <= _resMobile;
-    // isPad = mScreenWidth > _resMobile && mScreenWidth <= _resPad;
-    // isLaptop = mScreenWidth > _resPad && mScreenWidth <= _resLaptop;
-    // isDesktop = mScreenWidth > _resLaptop && mScreenWidth <= _resDesktop;
-    // isTV = mScreenWidth > _resDesktop;
+    isMobile = mWidth <= config.mobile.width;
+    isTab = mWidth > config.mobile.width && mWidth <= config.tab.width;
+    isLaptop = mWidth > config.tab.width && mWidth <= config.laptop.width;
+    isDesktop = mWidth > config.laptop.width && mWidth <= config.desktop.width;
+    isTV = mWidth > config.desktop.width;
     _detectedPixel = isScreenDetected ? _suggestedPixel() : mWidth;
     _detectedSpace = isScreenDetected ? _suggestedSpace() : mWidth;
   }

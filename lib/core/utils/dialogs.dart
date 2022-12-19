@@ -47,7 +47,7 @@ class Dialog {
 
   void submit() {
     final value = controller.text;
-    onChanged.call(value ?? "");
+    onChanged.call(value);
     controller.clear();
     Navigator.of(context).pop();
   }

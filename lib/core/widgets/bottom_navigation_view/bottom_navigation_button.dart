@@ -5,7 +5,7 @@ class BottomNavigationButton extends StatefulWidget {
   final Color primary, secondary;
   final bool isSelected;
   final Function() onPressed;
-  final String imagePath;
+  final Widget icon;
   final int counter;
   final double padding;
 
@@ -13,27 +13,18 @@ class BottomNavigationButton extends StatefulWidget {
     Key? key,
     required this.onPressed,
     required this.isSelected,
-    required this.imagePath,
+    required this.icon,
     this.counter = 0,
     required this.primary,
     required this.secondary,
-    required this.padding,
+    this.padding = 8,
   }) : super(key: key);
 
   @override
-  State<BottomNavigationButton> createState() =>
-      _BottomNavigationButtonState();
+  State<BottomNavigationButton> createState() => _BottomNavigationButtonState();
 }
 
 class _BottomNavigationButtonState extends State<BottomNavigationButton> {
-  late final _imageWidget = Image.asset(widget.imagePath);
-
-  @override
-  void didChangeDependencies() {
-    precacheImage(_imageWidget.image, context);
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     final padding = EdgeInsets.all(widget.padding);
@@ -58,7 +49,7 @@ class _BottomNavigationButtonState extends State<BottomNavigationButton> {
                   color: primary,
                   alignment: Alignment.center,
                   duration: const Duration(milliseconds: 500),
-                  child: _imageWidget,
+                  child: widget.icon,
                 ),
               ),
               BottomNavigationCounter(
