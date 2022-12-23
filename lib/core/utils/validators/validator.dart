@@ -112,7 +112,7 @@ class Validator {
   }
 
   static bool isInstance<T> (dynamic value, T instance) {
-    return value is T;
+    return value != null && value is T;
   }
 
   static bool isValidString(String? value, {int maxLength = 0, RegExp? regs}) {

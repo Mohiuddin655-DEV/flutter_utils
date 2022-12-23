@@ -138,4 +138,16 @@ class Converter {
 
     return buffer;
   }
+
+  static List<T> toList<T>(T cls, List<dynamic> list) {
+    final List<T> convertedList = [];
+    if (Validator.isValidList(list)) {
+      for (dynamic data in list) {
+        if (Validator.isInstance(data, cls)) {
+          convertedList.add(data as T);
+        }
+      }
+    }
+    return convertedList;
+  }
 }
