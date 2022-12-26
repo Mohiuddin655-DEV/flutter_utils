@@ -3,12 +3,12 @@ import '../constants/error_code.dart';
 
 class Response<T> {
   final int _requestCode;
-  int _errorCode = ErrorCode.NONE;
+  int? _errorCode = ErrorCode.NONE;
   T? _result;
   String? _feedback;
   dynamic _snapshot;
   String? _exception;
-  double _progress = 0;
+  double? _progress;
   bool _available = false;
   bool _successful = false;
   bool _cancel = false;
@@ -23,6 +23,42 @@ class Response<T> {
   bool _timeout = false;
 
   Response([this._requestCode = 0]);
+
+  set timeout(bool value) => _timeout = value;
+
+  set failed(bool value) => _failed = value;
+
+  set stopped(bool value) => _stopped = value;
+
+  set nullableObject(bool value) => _nullableObject = value;
+
+  set paused(bool value) => _paused = value;
+
+  set loaded(bool value) => _loaded = value;
+
+  set valid(bool value) => _valid = value;
+
+  set internetError(bool value) => _internetError = value;
+
+  set complete(bool value) => _complete = value;
+
+  set cancel(bool value) => _cancel = value;
+
+  set successful(bool value) => _successful = value;
+
+  set available(bool value) => _available = value;
+
+  set progress(double value) => _progress = value;
+
+  set exception(String value) => _exception = value;
+
+  set snapshot(dynamic value) => _snapshot = value;
+
+  set feedback(String value) => _feedback = value;
+
+  set result(T? value) => _result = value;
+
+  set errorCode(int value) => _errorCode = value;
 
   Response<T> withErrorCode(int errorCode) {
     withException(errorCode: errorCode);
@@ -160,21 +196,21 @@ class Response<T> {
     }
   }
 
+  Snapshot? getSnapshot<Snapshot>() => _snapshot is Snapshot ? _snapshot : null;
+
+  T? get result => _result is T ? _result as T : null;
+
   int get requestCode => _requestCode;
 
-  int get errorCode => _errorCode;
-
-  T? get result => _result;
+  int get errorCode => _errorCode ?? ErrorCode.NONE;
 
   String get feedback => _feedback ?? '';
-
-  dynamic get snapshot => _snapshot;
 
   String get exception => _exception ?? '';
 
   bool get isSuccessful => _successful;
 
-  double get progress => _progress;
+  double get progress => _progress ?? 0;
 
   bool get isAvailable => _available;
 
