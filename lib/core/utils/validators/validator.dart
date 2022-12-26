@@ -1,11 +1,8 @@
-
 import 'dart:core';
-import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/converters/converter.dart';
-import 'package:flutter_utils/core/utils/providers/time_provider.dart';
-import 'package:validators/validators.dart' as v;
 
-import '../constants/patterns.dart';
+import 'package:flutter_utils/core/utils/converters/converter.dart';
+import 'package:flutter_utils/core/utils/providers/date_provider.dart';
+
 import '../regex/regs.dart';
 
 class Validator {
@@ -16,7 +13,8 @@ class Validator {
   }
 
   static bool isMatched(Object matcher, Object value) {
-    return Validator.isValidObject(matcher) && matcher.toString() == value.toString();
+    return Validator.isValidObject(matcher) &&
+        matcher.toString() == value.toString();
   }
 
   static bool isMatchedList(List<String>? matchers, List<String>? values) {
@@ -36,7 +34,10 @@ class Validator {
   }
 
   static bool isChecked(dynamic checker, List<dynamic>? list) {
-    return Validator.isValidString(checker) && Validator.isValidList(list) && (list??[]).contains(checker);
+    return checker != null &&
+        list != null &&
+        list.isNotEmpty &&
+        list.contains(checker);
   }
 
   static bool isDigit(String? value) {
@@ -63,8 +64,10 @@ class Validator {
 
   static bool isValidYear(dynamic year, int requireAge) {
     int current = Converter.toInt(year);
-    int currentYear = TimeProvider.currentYear();
-    return (current > 1900) && (current < currentYear) && ((currentYear - current) >= requireAge);
+    int currentYear = DateProvider.currentYear();
+    return (current > 1900) &&
+        (current < currentYear) &&
+        ((currentYear - current) >= requireAge);
   }
 
   static bool isValidPhone(String? phone) {
@@ -76,7 +79,9 @@ class Validator {
   }
 
   static bool isValidPassword(String? password, [int minLength = 6]) {
-    return password != null && password.isNotEmpty && password.length >= minLength;
+    return password != null &&
+        password.isNotEmpty &&
+        password.length >= minLength;
   }
 
   static bool isValidRetypePassword(String? password, String? retypePassword) {
@@ -84,26 +89,33 @@ class Validator {
   }
 
   static bool isValidDigit(String? value) {
-    return value != null && value.isNotEmpty && equals(value, Converter.toDigit(value));
+    return value != null &&
+        value.isNotEmpty &&
+        equals(value, Converter.toDigit(value));
   }
 
   static bool isValidDigitWithLetter(String? value) {
-    return value != null && value.isNotEmpty && equals(value, Converter.toDigitWithLetter(value));
+    return value != null &&
+        value.isNotEmpty &&
+        equals(value, Converter.toDigitWithLetter(value));
   }
 
   static bool isValidDigitWithPlus(String value) {
-    return isValidString(value) && equals(value, Converter.toDigitWithPlus(value));
+    return isValidString(value) &&
+        equals(value, Converter.toDigitWithPlus(value));
   }
 
   static bool isValidLetter(String? value) {
-    return value != null && value.isNotEmpty && equals(value, Converter.toLetter(value));
+    return value != null &&
+        value.isNotEmpty &&
+        equals(value, Converter.toLetter(value));
   }
 
-  static bool isValidList (List<dynamic>? list) {
-  return list != null && list.isNotEmpty;
+  static bool isValidList(List<dynamic>? list) {
+    return list != null && list.isNotEmpty;
   }
 
-  static bool isValidSet<T> (Set<dynamic>? list) {
+  static bool isValidSet<T>(Set<dynamic>? list) {
     return list != null && list.isNotEmpty;
   }
 
@@ -111,29 +123,43 @@ class Validator {
     return value != null;
   }
 
-  static bool isInstance<T> (dynamic value, T instance) {
-    return value != null && value is T;
+  static bool isInstance<T>(dynamic value, T instance) {
+    return value != null && value.runtimeType == instance.runtimeType;
   }
 
-  static bool isValidString(String? value, {int maxLength = 0, RegExp? regs}) {
-    bool a = value != null && value.isNotEmpty && equals(value.toLowerCase(), 'null');
+  static bool isValidString(
+    String? value, {
+    int maxLength = 0,
+    int minLength = 0,
+    RegExp? regs,
+  }) {
+    bool a = value != null &&
+        value.isNotEmpty &&
+        !equals(value.toLowerCase(), 'null');
     bool b = maxLength <= 0 ? a : a && value.length <= maxLength;
-    bool c = regs != null ? regs.hasMatch(value??'') : b;
-    return true;
+    bool c = b && value.length >= minLength;
+    bool d = regs != null ? regs.hasMatch(value ?? '') : c;
+    return d;
   }
 
-  static bool isValidStrings(List<String> values) {
+  static bool isValidStrings(
+    List<String> values, {
+    int maxLength = 0,
+    int minLength = 0,
+    RegExp? regs,
+  }) {
     List<bool> list = [];
     for (String value in values) {
-      if (Validator.isValidString(value)) {
+      if (Validator.isValidString(
+        value,
+        maxLength: maxLength,
+        minLength: minLength,
+        regs: regs,
+      )) {
         list.add(true);
       }
     }
     return list.length == values.length;
-  }
-
-  static bool isValidVerificationCode(String? code) {
-    return code != null && code.isNotEmpty && code.length == 6;
   }
 
   static bool isValidWebURL(String? url) {

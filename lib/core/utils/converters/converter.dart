@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/providers/time_provider.dart';
+import 'package:flutter_utils/core/utils/providers/date_provider.dart';
 import 'package:flutter_utils/core/utils/validators/validator.dart';
 
 class Converter {
@@ -57,16 +57,20 @@ class Converter {
     }
   }
 
+  static T? toObject<T>(dynamic value) {
+    return value is T ? value : null;
+  }
+
   static int toDay(int timeMills) {
-    return TimeProvider.toDay(timeMills);
+    return DateProvider.toDay(timeMills);
   }
 
   static int toMonth(int timeMills) {
-    return TimeProvider.toMonth(timeMills);
+    return DateProvider.toMonth(timeMills);
   }
 
   static int toYear(int timeMills) {
-    return TimeProvider.toYear(timeMills);
+    return DateProvider.toYear(timeMills);
   }
 
   static String toDigit(String? value) {

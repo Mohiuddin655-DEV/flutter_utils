@@ -1,9 +1,11 @@
+import 'package:flutter_utils/core/utils/enums/replacer_type.dart';
+
 import '../converters/converter.dart';
 import '../validators/validator.dart';
 
-class Replacer2 {
+class Replacer {
   final String key;
-  final int type;
+  final ReplacerType type;
 
   final dynamic result;
   final List<dynamic> results;
@@ -11,7 +13,7 @@ class Replacer2 {
 
   final int position;
 
-  const Replacer2({
+  const Replacer({
     required this.key,
     required this.type,
     this.result,
@@ -24,7 +26,7 @@ class Replacer2 {
     return key;
   }
 
-  int getType() {
+  ReplacerType getType() {
     return type;
   }
 
