@@ -33,5 +33,4 @@ class KeyValue {
       return DataType.SERIALIZABLE;
     }
   }
-
 }

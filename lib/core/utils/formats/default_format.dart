@@ -24,6 +24,8 @@ class DefaultFormat {
   static const String DATE_DMY = '$DAY-$MONTH-$FULL_YEAR';
   static const String DATE_DM_Y = '$DAY $MONTH_FULL_NAME, $FULL_YEAR';
   static const String DATE_MD_Y = '$MONTH_FULL_NAME $DAY, $FULL_YEAR';
-  static const String DATE_E_DM_Y = '$DAY_FULL_NAME, $DAY $MONTH_FULL_NAME, $FULL_YEAR';
-  static const String DATE_E_MD_Y = '$DAY_FULL_NAME, $MONTH_FULL_NAME $DAY, $FULL_YEAR';
+  static const String DATE_E_DM_Y =
+      '$DAY_FULL_NAME, $DAY $MONTH_FULL_NAME, $FULL_YEAR';
+  static const String DATE_E_MD_Y =
+      '$DAY_FULL_NAME, $MONTH_FULL_NAME $DAY, $FULL_YEAR';
 }

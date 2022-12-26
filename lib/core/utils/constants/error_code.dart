@@ -11,7 +11,6 @@ import 'package:flutter_utils/core/utils/annotations/int_def.dart';
   ErrorCode.TIME_OUT
 ])
 class ErrorCode {
-
   static const int NONE = 10000;
   static const int CANCELED = 10010;
   static const int FAILURE = 10020;
@@ -22,4 +21,3 @@ class ErrorCode {
   static const int STOPPED = 10070;
   static const int TIME_OUT = 10080;
 }
-

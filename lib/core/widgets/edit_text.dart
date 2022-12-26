@@ -25,8 +25,7 @@ class EditText extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<EditText> createState() =>
-      _EditTextState();
+  State<EditText> createState() => _EditTextState();
 }
 
 class _EditTextState extends State<EditText> {

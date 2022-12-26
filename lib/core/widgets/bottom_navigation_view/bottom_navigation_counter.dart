@@ -18,13 +18,13 @@ class BottomNavigationCounter extends StatelessWidget {
     final visible = counter > 0;
     final color = visible
         ? isSelected
-        ? primary
-        : Colors.white
+            ? primary
+            : Colors.white
         : Colors.transparent;
     final background = visible
         ? isSelected
-        ? Colors.white
-        : primary
+            ? Colors.white
+            : primary
         : Colors.transparent;
 
     return Positioned(
