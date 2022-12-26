@@ -7,12 +7,12 @@ class TranslateProvider {
   ) async {
     if (text != null && text.isNotEmpty) {
       final response = await TranslateApi.of()
-          .setDefaultLang('en')
-          .setTranslateLang(language)
-          .setTranslateText(text)
-          .execute();
+          .withDefaultLang('en')
+          .withTranslateLang(language)
+          .withTranslateText(text)
+          .execute;
 
-      return response.getResult() ?? '';
+      return response.result ?? '';
     } else {
       return '';
     }

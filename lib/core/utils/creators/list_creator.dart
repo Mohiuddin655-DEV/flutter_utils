@@ -32,5 +32,5 @@ class ListCreator<T> {
     return data;
   }
 
-  List<List<T>> get collections => _collections ?? [];
+  List<List<T>> get collections => _collections;
 }

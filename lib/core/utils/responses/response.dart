@@ -2,7 +2,7 @@ import '../constants/base_messages.dart';
 import '../constants/error_code.dart';
 
 class Response<T> {
-  int _requestCode = 0;
+  final int _requestCode;
   int _errorCode = ErrorCode.NONE;
   T? _result;
   String? _feedback;
@@ -22,28 +22,14 @@ class Response<T> {
   bool _failed = false;
   bool _timeout = false;
 
-  Response([int? requestCode]) {
-    _requestCode = requestCode ?? _requestCode;
-  }
+  Response([this._requestCode = 0]);
 
-  int getRequestCode() {
-    return _requestCode;
-  }
-
-  int getErrorCode() {
-    return _errorCode;
-  }
-
-  Response<T> setErrorCode(int errorCode) {
-    setException(errorCode: errorCode);
+  Response<T> withErrorCode(int errorCode) {
+    withException(errorCode: errorCode);
     return this;
   }
 
-  T? getResult() {
-    return _result;
-  }
-
-  Response<T> setResult(T result) {
+  Response<T> withResult(T result) {
     _result = result;
     _successful = true;
     _complete = true;
@@ -51,34 +37,95 @@ class Response<T> {
     return this;
   }
 
-  String getFeedback() {
-    return _feedback ?? '';
-  }
-
-  Response<T> setFeedback(String feedback) {
+  Response<T> withFeedback(String feedback) {
     _feedback = feedback;
     return this;
   }
 
-  dynamic get snapshot => _snapshot;
-
-  Response<T> setSnapshot(dynamic snapshot) {
+  Response<T> withSnapshot(dynamic snapshot) {
     _snapshot = snapshot;
     return this;
   }
 
-  String get exception => _exception ?? '';
-
-  Response<T> setException({int errorCode = 0, String? exception}) {
+  Response<T> withException({int errorCode = 0, String? exception}) {
     _errorCode = errorCode;
-    _exception = errorCode != 0 ? getMessage(errorCode) : exception ?? '';
+    _exception = errorCode != 0 ? message(errorCode) : exception ?? '';
     _feedback = null;
     _complete = true;
     _loaded = true;
     return this;
   }
 
-  String getMessage([int code = 0]) {
+  Response<T> withSuccessful(bool successful) {
+    _successful = successful;
+    _complete = true;
+    return this;
+  }
+
+  Response<T> withProgress(double progress) {
+    _progress = progress;
+    return this;
+  }
+
+  Response<T> withAvailable(bool available) {
+    _available = available;
+    return this;
+  }
+
+  Response<T> withComplete(bool complete) {
+    _complete = complete;
+    return this;
+  }
+
+  Response<T> withCancel(bool cancel) {
+    _cancel = cancel;
+    return this;
+  }
+
+  Response<T> withValid(bool valid) {
+    _valid = valid;
+    _loaded = true;
+    return this;
+  }
+
+  Response<T> withLoaded(bool loaded) {
+    _loaded = loaded;
+    return this;
+  }
+
+  Response<T> withInternetError(String message, [bool? internetError]) {
+    withException(exception: message);
+    _internetError = internetError ?? true;
+    _valid = false;
+    return this;
+  }
+
+  Response<T> withPaused(bool paused) {
+    _paused = paused;
+    return this;
+  }
+
+  Response<T> withNullableObject(bool nullableObject) {
+    _nullableObject = nullableObject;
+    return this;
+  }
+
+  Response<T> withStopped(bool stopped) {
+    _stopped = stopped;
+    return this;
+  }
+
+  Response<T> withFailed(bool failed) {
+    _failed = failed;
+    return this;
+  }
+
+  Response<T> withTimeout(bool timeout) {
+    _timeout = timeout;
+    return this;
+  }
+
+  String message([int code = 0]) {
     if (code != 0) {
       switch (code) {
         case ErrorCode.CANCELED:
@@ -113,136 +160,47 @@ class Response<T> {
     }
   }
 
-  bool isSuccessful() {
-    return _successful;
-  }
+  int get requestCode => _requestCode;
 
-  Response<T> setSuccessful(bool successful) {
-    _successful = successful;
-    _complete = true;
-    return this;
-  }
+  int get errorCode => _errorCode;
 
-  double getProgress() {
-    return _progress;
-  }
+  T? get result => _result;
 
-  Response<T> setProgress(double progress) {
-    _progress = progress;
-    return this;
-  }
+  String get feedback => _feedback ?? '';
 
-  bool isAvailable() {
-    return _available;
-  }
+  dynamic get snapshot => _snapshot;
 
-  Response<T> setAvailable(bool available) {
-    _available = available;
-    return this;
-  }
+  String get exception => _exception ?? '';
 
-  bool isComplete() {
-    return _complete;
-  }
+  bool get isSuccessful => _successful;
 
-  Response<T> setComplete(bool complete) {
-    _complete = complete;
-    return this;
-  }
+  double get progress => _progress;
 
-  bool isCancel() {
-    return _cancel;
-  }
+  bool get isAvailable => _available;
 
-  Response<T> setCancel(bool cancel) {
-    _cancel = cancel;
-    return this;
-  }
+  bool get isComplete => _complete;
 
-  bool isValid() {
-    return _valid;
-  }
+  bool get isCancel => _cancel;
 
-  Response<T> setValid(bool valid) {
-    _valid = valid;
-    _loaded = true;
-    return this;
-  }
+  bool get isValid => _valid;
 
-  bool isLoaded() {
-    return _loaded;
-  }
+  bool get isLoaded => _loaded;
 
-  Response<T> setLoaded(bool loaded) {
-    _loaded = loaded;
-    return this;
-  }
+  bool get isLoading => !_loaded;
 
-  bool isLoading() {
-    return !_loaded;
-  }
+  bool get isInternetConnected => !_internetError;
 
-  bool isInternetConnected() {
-    return !_internetError;
-  }
+  bool get isValidException => _exception != null && _exception!.isNotEmpty;
 
-  bool isValidException() {
-    return _exception != null && _exception!.isNotEmpty;
-  }
+  bool get isInternetError => _internetError;
 
-  bool isInternetError() {
-    return _internetError;
-  }
+  bool get isPaused => _paused;
 
-  Response<T> setInternetError(String message, [bool? internetError]) {
-    setException(exception: message);
-    _internetError = internetError ?? true;
-    _valid = false;
-    return this;
-  }
+  bool get isNullableObject => _nullableObject;
 
-  bool isPaused() {
-    return _paused;
-  }
+  bool get isStopped => _stopped;
 
-  Response<T> setPaused(bool paused) {
-    _paused = paused;
-    return this;
-  }
+  bool get isFailed => _failed;
 
-  bool isNullableObject() {
-    return _nullableObject;
-  }
-
-  Response<T> setNullableObject(bool nullableObject) {
-    _nullableObject = nullableObject;
-    return this;
-  }
-
-  bool isStopped() {
-    return _stopped;
-  }
-
-  Response<T> setStopped(bool stopped) {
-    _stopped = stopped;
-    return this;
-  }
-
-  bool isFailed() {
-    return _failed;
-  }
-
-  Response<T> setFailed(bool failed) {
-    _failed = failed;
-    return this;
-  }
-
-  bool isTimeout() {
-    return _timeout;
-  }
-
-  Response<T> setTimeout(bool timeout) {
-    _timeout = timeout;
-    return this;
-  }
+  bool get isTimeout => _timeout;
 }

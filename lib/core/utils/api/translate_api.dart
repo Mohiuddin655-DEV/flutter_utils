@@ -27,22 +27,22 @@ class TranslateApi {
     return instance;
   }
 
-  TranslateApi setDefaultLang(String defaultLang) {
-    this._defaultLang = defaultLang;
+  TranslateApi withDefaultLang(String defaultLang) {
+    _defaultLang = defaultLang;
     return this;
   }
 
-  TranslateApi setTranslateLang(String translateLang) {
-    this._translateLang = translateLang;
+  TranslateApi withTranslateLang(String translateLang) {
+    _translateLang = translateLang;
     return this;
   }
 
-  TranslateApi setTranslateText(String text) {
-    this._text = text;
+  TranslateApi withTranslateText(String text) {
+    _text = text;
     return this;
   }
 
-  Future<Response<String>> execute() async {
+  Future<Response<String>> get execute async {
     final response = Response<String>(Code.TRANSLATE);
     if (_defaultLang.isNotEmpty &&
         _translateLang != null &&
@@ -58,14 +58,14 @@ class TranslateApi {
         final data = await http.get(uri);
         if (data.statusCode == 200) {
           final text = jsonDecode(data.body);
-          response.setResult(text);
+          response.withResult(text);
         } else {
-          response.setException(
+          response.withException(
             exception: 'Error code : ${data.statusCode}',
           );
         }
       } catch (e) {
-        response.setException(exception: e.toString());
+        response.withException(exception: e.toString());
       }
     }
     return response;

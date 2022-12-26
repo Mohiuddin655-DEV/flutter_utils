@@ -1,16 +1,17 @@
 enum ActionType {
-  NONE;
-  static const String ADD = "Add";
-  static const String CONFIRM = "Confirm";
-  static const String CANCEL = "Cancel";
-  static const String CHANGE = "Change";
-  static const String CHOOSE = "Choose";
-  static const String DELETE = "Delete";
-  static const String EDIT = "Edit";
-  static const String NO = "No";
-  static const String REMOVE = "Remove";
-  static const String TRY_AGAIN = "Try Again";
-  static const String SKIP = "Skip";
-  static const String UPDATE = "Update";
-  static const String YES = "Yes";
+  none;
+
+  static const String add = "Add";
+  static const String confirm = "Confirm";
+  static const String cancel = "Cancel";
+  static const String change = "Change";
+  static const String choose = "Choose";
+  static const String delete = "Delete";
+  static const String edit = "Edit";
+  static const String no = "No";
+  static const String remove = "Remove";
+  static const String tryAgain = "Try Again";
+  static const String skip = "Skip";
+  static const String update = "Update";
+  static const String yes = "Yes";
 }
