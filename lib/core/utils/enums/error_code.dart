@@ -12,6 +12,7 @@ enum ErrorCode {
   RUNNING(10090, ""),
   TIME_OUT(10080, BaseMessage.EXCEPTION_TRY_AGAIN),
   SUCCESS(10100, 'Successful!'),
+  INVALID(10110, 'Invalid data!'),
   ERROR(10100, 'Error found!');
 
   final int code;
