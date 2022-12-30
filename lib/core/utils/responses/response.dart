@@ -2,7 +2,7 @@ import '../enums/error_code.dart';
 
 class Response<T> {
   final int _requestCode;
-  ErrorStatus? _errorStatus;
+  ErrorCode? _errorStatus;
   T? _result;
   String? _feedback;
   dynamic _snapshot;
@@ -57,15 +57,16 @@ class Response<T> {
 
   set result(T? value) => _result = value;
 
-  set errorStatus(ErrorStatus value) => _errorStatus = value;
+  set errorStatus(ErrorCode value) => _errorStatus = value;
 
-  Response<T> withErrorStatus(ErrorStatus status) {
+  Response<T> withErrorStatus(ErrorCode status) {
     withException(status: status);
     return this;
   }
 
   Response<T> withResult(T result) {
     _result = result;
+    _errorStatus = ErrorCode.SUCCESS;
     _successful = true;
     _complete = true;
     _loaded = true;
@@ -82,9 +83,9 @@ class Response<T> {
     return this;
   }
 
-  Response<T> withException({ErrorStatus? status, String? exception}) {
+  Response<T> withException({ErrorCode? status, dynamic exception}) {
     _errorStatus = status;
-    _exception = status != null ? status.message : exception ?? '';
+    _exception = status != null ? status.message : exception?.toString() ?? '';
     _feedback = null;
     _complete = true;
     _loaded = true;
@@ -166,9 +167,9 @@ class Response<T> {
 
   int get requestCode => _requestCode;
 
-  int get errorCode => (_errorStatus ?? ErrorStatus.NONE).code;
+  int get errorCode => (_errorStatus ?? ErrorCode.NONE).code;
 
-  String get errorMessage => (_errorStatus ?? ErrorStatus.NONE).message;
+  String get errorMessage => (_errorStatus ?? ErrorCode.NONE).message;
 
   String get feedback => _feedback ?? '';
 

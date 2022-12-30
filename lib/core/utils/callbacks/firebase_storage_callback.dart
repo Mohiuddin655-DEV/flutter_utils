@@ -1,302 +1,433 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_utils/core/utils/enums/error_code.dart';
+import 'package:flutter_utils/core/utils/providers/connectivity_provider.dart';
+import 'package:flutter_utils/core/utils/providers/task_provider.dart';
+
+import '../providers/key_provider.dart';
+import '../responses/response.dart';
+
 class FirebaseStorageCallback {
+  final _codeDelete = 10010;
+  final _codeDownload = 10020;
+  final _codeUpload = 10030;
+  final _tempData = <Uint8List?>[];
+  final _tempUrls = <String>[];
 
-    static final String TAG = "firebase_storage_callback";
+  late Reference _reference;
+  late ConnectivityProvider _connectivity;
 
-    static final int _codeDelete = 10010;
-    static final int _codeDownload = 10020;
-    static final int _codeUpload = 10030;
-    List<String> _finalUrls = [];
-    List<Uri> mFinalUris = [];
+  Future<bool> get isConnected async => await _connectivity.isConnected;
 
-    final ConnectivityService mNetworkService;
+  FirebaseStorageCallback() {
+    _connectivity = ConnectivityProvider.I;
+    _reference = FirebaseStorage.instance.ref();
+  }
 
-    final StorageReference _reference;
+  static FirebaseStorageCallback getInstance() {
+    return FirebaseStorageCallback();
+  }
 
-    FirebaseStorageCallback() {
-        mNetworkService = NetworkService.getInstance(activity);
-        mStorageReference = FirebaseStorage.getInstance().getReference();
+  Reference getFilePath(String path) {
+    return _reference.child(path).child(KeyProvider.generateKey());
+  }
+
+  void deleteRequestByUrl(
+    String url,
+    OnCallbackResponseListener<void> listener,
+  ) async {
+    final Response response = Response(_codeDelete);
+
+    if (await isConnected) {
+      listener
+          .onResponse(response.withErrorStatus(ErrorCode.NETWORK_UNAVAILABLE));
+    } else {
+      final Reference reference = FirebaseStorage.instance.refFromURL(url);
+
+      reference
+          .delete()
+          .then((value) => listener.onResponse(response.withResult(null)))
+          .onError((e, s) => listener.onResponse(response
+              .withErrorStatus(ErrorCode.FAILURE)
+              .withException(exception: e)));
     }
+  }
 
-    static FirebaseStorageCallback getInstance() {
-        return FirebaseStorageCallback();
+  void deleteRequestByUrls(
+    List<String> urls,
+    OnCallbackResponseListener<void> listener,
+  ) async {
+    _tempUrls.clear();
+
+    final response = Response(_codeDelete);
+
+    if (await isConnected) {
+      listener
+          .onResponse(response.withErrorStatus(ErrorCode.NETWORK_UNAVAILABLE));
+    } else {
+      for (String url in urls) {
+        final reference = FirebaseStorage.instance.refFromURL(url);
+
+        reference.delete().onError(
+          (e, s) {
+            listener.onResponse(
+              response
+                  .withErrorStatus(ErrorCode.FAILURE)
+                  .withException(exception: e),
+            );
+          },
+        ).then((value) {
+          _tempUrls.add("null");
+          if (TaskProvider.isComplete(urls.length, _tempUrls.length)) {
+            listener.onResponse(response.withResult(null));
+          }
+        });
+      }
     }
+  }
 
-    StorageReference _getFilePath(String path) {
-        return mStorageReference.child(path).child(KeyProvider.generateKey());
+  void downloadRequestSingle(
+    String url,
+    int byteQuality,
+    OnCallbackResponseListener<Uint8List?> listener,
+  ) async {
+    final response = Response<Uint8List?>(_codeDownload);
+
+    if (await isConnected) {
+      listener.onResponse(
+        response.withErrorStatus(ErrorCode.NETWORK_UNAVAILABLE),
+      );
+    } else {
+      final fileReference = FirebaseStorage.instance.refFromURL(url);
+
+      fileReference.getData(byteQuality).onError((e, s) {
+        listener.onResponse(
+          response
+              .withErrorStatus(ErrorCode.FAILURE)
+              .withException(exception: e),
+        );
+        return null;
+      }).then((value) {
+        listener.onResponse(response.withResult(value));
+      });
     }
+  }
 
-    void deleteRequestByUrl(String url) {
-        deleteRequestByUrl(url, response -> Log.e(TAG, "deleteByUrl: " + response.getMessage(), response.getException()));
+  void downloadRequestForMultiple(
+    List<String> urls,
+    int byteQuality,
+    OnCallbackResponseListener<List<Uint8List?>> listener,
+  ) async {
+    final response = Response<List<Uint8List?>>(_codeDownload);
+
+    if (await isConnected) {
+      listener.onResponse(
+        response.withErrorStatus(ErrorCode.NETWORK_UNAVAILABLE),
+      );
+    } else {
+      for (String url in urls) {
+        final fileReference = FirebaseStorage.instance.refFromURL(url);
+
+        fileReference.getData(byteQuality).onError((e, s) {
+          listener.onResponse(
+            response
+                .withErrorStatus(ErrorCode.FAILURE)
+                .withException(exception: e),
+          );
+          return null;
+        }).then((value) {
+          _tempData.insert(0, value);
+          if (TaskProvider.isComplete(urls.length, _tempData.length)) {
+            listener.onResponse(response.withResult(_tempData));
+          }
+        });
+      }
     }
+  }
 
-    void deleteRequestByUrl(String url, OnCallbackResponseListener<Void> listener) {
+  void upload(
+    String path,
+    dynamic file,
+    OnCallbackResponseListener<String> listener,
+  ) async {
+    final response = Response<String>(_codeUpload);
 
-        final Response<Void> response = new Response<>(CODE_DELETE);
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      final UploadTask uploadTask = fileReference.putBlob(file);
 
-        if (!mNetworkService.isInternetConnected()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            final StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-
-            reference.delete()
-                    .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                    .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                    .addOnSuccessListener(mActivity, unused -> listener.onResponse(response.setResult(null)));
+      uploadTask.snapshotEvents.listen((event) async {
+        switch (event.state) {
+          case TaskState.paused:
+            response.errorStatus = ErrorCode.PAUSED;
+            listener.onResponse(response);
+            break;
+          case TaskState.running:
+            response.errorStatus = ErrorCode.RUNNING;
+            response.progress = TaskProvider.getProgress(event);
+            listener.onResponse(response);
+            break;
+          case TaskState.success:
+            final url = await fileReference.getDownloadURL();
+            listener.onResponse(response.withResult(url));
+            break;
+          case TaskState.canceled:
+            response.errorStatus = ErrorCode.CANCELED;
+            listener.onResponse(response);
+            break;
+          case TaskState.error:
+            response.errorStatus = ErrorCode.ERROR;
+            listener.onResponse(response);
+            break;
         }
+      }).onError((e) {
+        listener.onResponse(response.withException(exception: e));
+      });
     }
+  }
 
-    void deleteRequestByUrls(List<String> urls) {
-        deleteRequestByUrls(urls, response -> Log.e(TAG, "deleteByUrls: " + response.getMessage(), response.getException()));
-    }
+  void uploadFile(
+    String path,
+    File file,
+    OnCallbackResponseListener<String> listener,
+  ) async {
+    final response = Response<String>(_codeUpload);
 
-    void deleteRequestByUrls(List<String> urls, OnCallbackResponseListener<Void> listener) {
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      final UploadTask uploadTask = fileReference.putFile(file);
 
-        this.mFinalUrls.clear();
-
-        final Response<Void> response = new Response<>(CODE_DELETE);
-
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            for (String url : urls) {
-
-                final StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-
-                reference
-                        .delete()
-                        .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                        .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                        .addOnSuccessListener(unused -> {
-                            this.mFinalUrls.add("null");
-                            if (TaskProvider.isComplete(urls.size(), mFinalUrls.size())) {
-                                listener.onResponse(response.setResult(null));
-                            }
-                        });
-            }
+      uploadTask.snapshotEvents.listen((event) async {
+        switch (event.state) {
+          case TaskState.paused:
+            response.errorStatus = ErrorCode.PAUSED;
+            listener.onResponse(response);
+            break;
+          case TaskState.running:
+            response.errorStatus = ErrorCode.RUNNING;
+            response.progress = TaskProvider.getProgress(event);
+            listener.onResponse(response);
+            break;
+          case TaskState.success:
+            final url = await fileReference.getDownloadURL();
+            listener.onResponse(response.withResult(url));
+            break;
+          case TaskState.canceled:
+            response.errorStatus = ErrorCode.CANCELED;
+            listener.onResponse(response);
+            break;
+          case TaskState.error:
+            response.errorStatus = ErrorCode.ERROR;
+            listener.onResponse(response);
+            break;
         }
+      }).onError((e) {
+        listener.onResponse(response.withException(exception: e));
+      });
     }
+  }
 
-    void downloadRequestForBitmap(String url, int byteQuality, OnCallbackResponseListener<Bitmap> listener) {
+  void uploadSingle(
+    String path,
+    Uint8List data,
+    OnCallbackResponseListener<String> listener,
+  ) async {
+    final response = Response<String>(_codeUpload);
 
-        final Response<Bitmap> response = new Response<>(CODE_DOWNLOAD);
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      final UploadTask uploadTask = fileReference.putData(data);
 
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            final StorageReference fileReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-
-            fileReference.getBytes(byteQuality)
-                    .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                    .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                    .addOnSuccessListener(mActivity, bytes -> {
-                        Bitmap bitmap = Converter.toBitmap(bytes);
-                        listener.onResponse(response.setResult(bitmap));
-                    });
+      uploadTask.snapshotEvents.listen((event) async {
+        switch (event.state) {
+          case TaskState.paused:
+            response.errorStatus = ErrorCode.PAUSED;
+            listener.onResponse(response);
+            break;
+          case TaskState.running:
+            response.errorStatus = ErrorCode.RUNNING;
+            response.progress = TaskProvider.getProgress(event);
+            listener.onResponse(response);
+            break;
+          case TaskState.success:
+            final url = await fileReference.getDownloadURL();
+            listener.onResponse(response.withResult(url));
+            break;
+          case TaskState.canceled:
+            response.errorStatus = ErrorCode.CANCELED;
+            listener.onResponse(response);
+            break;
+          case TaskState.error:
+            response.errorStatus = ErrorCode.ERROR;
+            listener.onResponse(response);
+            break;
         }
+      }).onError((e) {
+        listener.onResponse(response.withException(exception: e));
+      });
     }
+  }
 
-    void downloadRequestForUris(List<String> urls, long byteQuality, OnCallbackResponseListener<List<Uri>> listener) {
+  void uploads(
+    String path,
+    List<dynamic> files,
+    OnCallbackResponseListener<List<String>> listener,
+  ) async {
+    final response = Response<List<String>>(_codeUpload);
 
-        final Response<ArrayList<Uri>> response = new Response<>(CODE_DOWNLOAD);
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      for (File file in files) {
+        final UploadTask uploadTask = fileReference.putBlob(file);
 
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            for (String url : urls) {
-
-                final StorageReference fileReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-
-                fileReference.getBytes(byteQuality)
-                        .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                        .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                        .addOnSuccessListener(mActivity, bytes -> {
-                            Bitmap bitmap = Converter.toBitmap(bytes);
-                            Uri uri = Converter.toUri(mActivity.getApplicationContext(), bitmap);
-                            this.mFinalUris.add(0, uri);
-                            if (TaskProvider.isComplete(urls.size(), mFinalUris.size())) {
-                                listener.onResponse(response.setResult(mFinalUris));
-                            }
-                        });
-            }
-        }
+        uploadTask.snapshotEvents.listen((event) async {
+          switch (event.state) {
+            case TaskState.paused:
+              response.errorStatus = ErrorCode.PAUSED;
+              listener.onResponse(response);
+              break;
+            case TaskState.running:
+              response.errorStatus = ErrorCode.RUNNING;
+              response.progress = TaskProvider.getProgress(event);
+              listener.onResponse(response);
+              break;
+            case TaskState.success:
+              final url = await fileReference.getDownloadURL();
+              _tempUrls.insert(0, url);
+              if (TaskProvider.isComplete(files.length, _tempUrls.length)) {
+                listener.onResponse(response.withResult(_tempUrls));
+              }
+              break;
+            case TaskState.canceled:
+              response.errorStatus = ErrorCode.CANCELED;
+              listener.onResponse(response);
+              break;
+            case TaskState.error:
+              response.errorStatus = ErrorCode.ERROR;
+              listener.onResponse(response);
+              break;
+          }
+        }).onError((e) {
+          listener.onResponse(response.withException(exception: e));
+        });
+      }
     }
+  }
 
-    void downloadRequestForUri(String url, long byteQuality, OnCallbackResponseListener<Uri> listener) {
+  void uploadFiles(
+    String path,
+    List<File> files,
+    OnCallbackResponseListener<List<String>> listener,
+  ) async {
+    final response = Response<List<String>>(_codeUpload);
 
-        final Response<Uri> response = new Response<>(CODE_DOWNLOAD);
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      for (File file in files) {
+        final UploadTask uploadTask = fileReference.putFile(file);
 
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            final StorageReference fileReference = FirebaseStorage.getInstance().getReferenceFromUrl(url);
-
-            fileReference.getBytes(byteQuality)
-                    .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                    .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                    .addOnSuccessListener(mActivity, bytes -> {
-                        Bitmap bitmap = Converter.toBitmap(bytes);
-                        Uri uri = Converter.toUri(mActivity.getApplicationContext(), bitmap);
-                        listener.onResponse(response.setResult(uri));
-                    });
-        }
+        uploadTask.snapshotEvents.listen((event) async {
+          switch (event.state) {
+            case TaskState.paused:
+              response.errorStatus = ErrorCode.PAUSED;
+              listener.onResponse(response);
+              break;
+            case TaskState.running:
+              response.errorStatus = ErrorCode.RUNNING;
+              response.progress = TaskProvider.getProgress(event);
+              listener.onResponse(response);
+              break;
+            case TaskState.success:
+              final url = await fileReference.getDownloadURL();
+              _tempUrls.insert(0, url);
+              if (TaskProvider.isComplete(files.length, _tempUrls.length)) {
+                listener.onResponse(response.withResult(_tempUrls));
+              }
+              break;
+            case TaskState.canceled:
+              response.errorStatus = ErrorCode.CANCELED;
+              listener.onResponse(response);
+              break;
+            case TaskState.error:
+              response.errorStatus = ErrorCode.ERROR;
+              listener.onResponse(response);
+              break;
+          }
+        }).onError((e) {
+          listener.onResponse(response.withException(exception: e));
+        });
+      }
     }
+  }
 
-    void uploadRequestForUrl(String path, Uri uri, OnCallbackResponseListener<String> listener) {
+  void uploadMultiple(
+    String path,
+    List<Uint8List> multipleData,
+    OnCallbackResponseListener<List<String>> listener,
+  ) async {
+    final response = Response<List<String>>(_codeUpload);
 
-        final Response<String> response = new Response<>(CODE_UPLOAD);
+    if (await isConnected) {
+      response.errorStatus = ErrorCode.NETWORK_UNAVAILABLE;
+      listener.onResponse(response);
+    } else {
+      final Reference fileReference = getFilePath(path);
+      for (Uint8List data in multipleData) {
+        final UploadTask uploadTask = fileReference.putData(data);
 
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else if (!Validator.isValidString(path)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!Validator.isValidObject(uri)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else {
-
-            final StorageReference fileReference = getFilePath(path);
-            final UploadTask uploadTask = fileReference.putFile(uri);
-
-            uploadTask
-                    .addOnProgressListener(mActivity, snapshot -> listener.onResponse(response.setProgress(TaskProvider.getProgress(snapshot))))
-                    .addOnPausedListener(mActivity, snapshot -> listener.onResponse(response.setErrorCode(ErrorCode.PAUSED)))
-                    .continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            if (task.getException() != null) throw task.getException();
-                        }
-                        return fileReference.getDownloadUrl();
-                    })
-                    .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                    .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                    .addOnSuccessListener(downloadUri -> listener.onResponse(response.setResult(Converter.toString(downloadUri))));
-        }
+        uploadTask.snapshotEvents.listen((event) async {
+          switch (event.state) {
+            case TaskState.paused:
+              response.errorStatus = ErrorCode.PAUSED;
+              listener.onResponse(response);
+              break;
+            case TaskState.running:
+              response.errorStatus = ErrorCode.RUNNING;
+              response.progress = TaskProvider.getProgress(event);
+              listener.onResponse(response);
+              break;
+            case TaskState.success:
+              final url = await fileReference.getDownloadURL();
+              _tempUrls.insert(0, url);
+              if (TaskProvider.isComplete(
+                  multipleData.length, _tempUrls.length)) {
+                listener.onResponse(response.withResult(_tempUrls));
+              }
+              break;
+            case TaskState.canceled:
+              response.errorStatus = ErrorCode.CANCELED;
+              listener.onResponse(response);
+              break;
+            case TaskState.error:
+              response.errorStatus = ErrorCode.ERROR;
+              listener.onResponse(response);
+              break;
+          }
+        }).onError((e) {
+          listener.onResponse(response.withException(exception: e));
+        });
+      }
     }
-
-    void uploadRequestForUrls(String path, List<Uri> uris, OnCallbackResponseListener<List<String>> listener) {
-
-        final Response<List<String>> response = new Response<>(CODE_UPLOAD);
-
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else if (!Validator.isValidString(path)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!Validator.isValidList(uris)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!mNetworkService.isInternetConnected()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            for (Uri uri : uris) {
-
-                if (!Validator.isValidObject(uri)) {
-                    listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-                } else {
-
-                    final StorageReference fileReference = getFilePath(path);
-                    final UploadTask uploadTask = fileReference.putFile(uri);
-
-                    uploadTask
-                            .addOnPausedListener(mActivity, snapshot -> listener.onResponse(response.setErrorCode(ErrorCode.PAUSED)))
-                            .addOnProgressListener(mActivity, snapshot -> listener.onResponse(response.setProgress(TaskProvider.getProgress(snapshot))))
-                            .continueWithTask(task -> {
-                                if (!task.isSuccessful()) {
-                                    if (task.getException() != null) throw task.getException();
-                                }
-                                return fileReference.getDownloadUrl();
-                            })
-                            .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                            .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                            .addOnSuccessListener(downloadUri -> {
-                                this.mFinalUrls.add(0, Converter.toString(downloadUri));
-                                if (TaskProvider.isComplete(uris.size(), mFinalUrls.size())) {
-                                    listener.onResponse(response.setResult(mFinalUrls));
-                                }
-                            });
-                }
-            }
-        }
-    }
-
-    void uploadRequestWithoutProgressForUrl(String path, Uri uri, OnCallbackResponseListener<String> listener) {
-
-        final Response<String> response = new Response<>(CODE_UPLOAD);
-
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else if (!Validator.isValidString(path)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!Validator.isValidObject(uri)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else {
-
-            final StorageReference fileReference = getFilePath(path);
-            final UploadTask uploadTask = fileReference.putFile(uri);
-
-            uploadTask
-                    .continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            if (task.getException() != null) throw task.getException();
-                        }
-                        return fileReference.getDownloadUrl();
-                    })
-                    .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                    .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                    .addOnSuccessListener(downloadUri -> listener.onResponse(response.setResult(Converter.toString(downloadUri))));
-        }
-    }
-
-    void uploadRequestWithoutProgressForUrls(String path, List<Uri> uris, OnCallbackResponseListener<List<String>> listener) {
-
-        final Response<List<String>> response = new Response<>(CODE_UPLOAD);
-
-        if (isInternetUnavailable()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else if (!Validator.isValidString(path)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!Validator.isValidList(uris)) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-        } else if (!mNetworkService.isInternetConnected()) {
-            listener.onResponse(response.setErrorCode(ErrorCode.NETWORK_UNAVAILABLE));
-        } else {
-
-            for (Uri uri : uris) {
-
-                if (!Validator.isValidObject(uri)) {
-                    listener.onResponse(response.setErrorCode(ErrorCode.NULLABLE_OBJECT));
-                } else {
-
-                    final StorageReference fileReference = getFilePath(path);
-                    final UploadTask uploadTask = fileReference.putFile(uri);
-
-                    uploadTask.continueWithTask(task -> {
-                                if (!task.isSuccessful()) {
-                                    if (task.getException() != null) throw task.getException();
-                                }
-                                return fileReference.getDownloadUrl();
-                            })
-                            .addOnCanceledListener(mActivity, () -> listener.onResponse(response.setErrorCode(ErrorCode.CANCELED)))
-                            .addOnFailureListener(mActivity, e -> listener.onResponse(response.setErrorCode(ErrorCode.FAILURE).setException(e)))
-                            .addOnSuccessListener(downloadUri -> {
-                                this.mFinalUrls.add(0, Converter.toString(downloadUri));
-                                if (TaskProvider.isComplete(uris.size(), mFinalUrls.size())) {
-                                    listener.onResponse(response.setResult(mFinalUrls));
-                                }
-                            });
-                }
-            }
-        }
-    }
-
-    bool isInternetUnavailable() {
-        return !mNetworkService.isInternetConnected();
-    }
-
+  }
 }
 
 abstract class OnCallbackResponseListener<T> {
-    void onResponse(@NonNull Response<T> response);
+  void onResponse(Response<T> response);
 }

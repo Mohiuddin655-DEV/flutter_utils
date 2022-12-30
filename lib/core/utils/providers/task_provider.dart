@@ -5,10 +5,10 @@ class TaskProvider {
 
   static bool isComplete(int initial, int progress) => initial == progress;
 
-  static int getProgress(TaskSnapshot snapshot) {
+  static double getProgress(TaskSnapshot snapshot) {
     final transferred = snapshot.bytesTransferred;
     final total = snapshot.totalBytes;
     final progress = 100.0 * (transferred / total);
-    return progress.toInt();
+    return progress;
   }
 }
