@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension StringHelper on String {
-  String format({
+  String modify({
     CaseFormat? format,
     CaseType? type,
     String modifier = '',
@@ -47,22 +47,22 @@ extension StringHelper on String {
   }
 
   String join(String sub) {
-    return '$this $sub';
+    return '${this}$sub';
   }
 
-  String get expensiveLowercase => format(type: CaseType.lowercase);
+  String get expensiveLowercase => modify(type: CaseType.lowercase);
 
-  String get expensiveVertical => format(modifier: '\n');
+  String get expensiveVertical => modify(modifier: '\n');
 
-  String get expensiveUppercase => format(type: CaseType.uppercase);
+  String get expensiveUppercase => modify(type: CaseType.uppercase);
 
   String get lowercase => toLowerCase();
 
   String get uppercase => toUpperCase();
 
-  String get uppercaseByWord => format(format: CaseFormat.word);
+  String get uppercaseByWord => modify(format: CaseFormat.word);
 
-  String get uppercaseBySentence => format(format: CaseFormat.sentence);
+  String get uppercaseBySentence => modify(format: CaseFormat.sentence);
 }
 
 enum CaseType {

@@ -31,7 +31,7 @@ extension DateHelper on DateTime {
     }
   }
 
-  String format(String format, [String? local]) {
+  String modify(String format, [String? local]) {
     return DateFormat(format, local).format(this);
   }
 }

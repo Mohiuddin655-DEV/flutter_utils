@@ -36,6 +36,6 @@ class KeyProvider {
 
   static String generateDatableKey([int? ms, String? dateFormat]) {
     final time = DateProvider.toDateTime(ms);
-    return time.format(dateFormat ?? KeyFormat.FORMAT_REFERENCE_DATE).lowercase;
+    return time.modify(dateFormat ?? KeyFormat.FORMAT_REFERENCE_DATE).lowercase;
   }
 }

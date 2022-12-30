@@ -73,9 +73,9 @@ class DateConverter {
     } else if (tempMS < hourMS) {
       return "$minuteCount minute ago";
     } else if (tempMS < dayMS && time.isYesterday) {
-      return 'Yesterday - ${time.format(timeFormat)}';
+      return 'Yesterday - ${time.modify(timeFormat)}';
     } else {
-      return '${time.format(dateFormat)} - ${time.format(timeFormat)}';
+      return '${time.modify(dateFormat)} - ${time.modify(timeFormat)}';
     }
   }
 
