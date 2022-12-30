@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../constants/code.dart';
+import '../enums/code.dart';
 import '../responses/response.dart';
 
 class TranslateApi {
@@ -43,7 +43,7 @@ class TranslateApi {
   }
 
   Future<Response<String>> get execute async {
-    final response = Response<String>(Code.TRANSLATE);
+    final response = Response<String>(Code.translate.value);
     if (_defaultLang.isNotEmpty &&
         _translateLang != null &&
         _translateLang!.isNotEmpty &&

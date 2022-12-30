@@ -62,7 +62,7 @@ class Replacer {
 
   List<T> getResults<T>(T cls) {
     if (result.runtimeType == cls.runtimeType) {
-      return Converter.toList(cls, results);
+      return Converter.toList(list: results);
     } else {
       return [];
     }

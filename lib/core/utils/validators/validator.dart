@@ -41,7 +41,7 @@ class Validator {
   }
 
   static bool isDigit(String? value) {
-    return value != null && Regs.numeric.hasMatch(value);
+    return value != null && Regs.digit.hasMatch(value);
   }
 
   static bool isLetter(String? value) {
@@ -91,7 +91,7 @@ class Validator {
   static bool isValidDigit(String? value) {
     return value != null &&
         value.isNotEmpty &&
-        equals(value, Converter.toDigit(value));
+        equals(value, Converter.toNumeric(value, true));
   }
 
   static bool isValidDigitWithLetter(String? value) {

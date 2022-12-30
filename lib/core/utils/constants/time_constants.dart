@@ -1,8 +1,8 @@
 class TimeConstrains {
   const TimeConstrains._();
 
-  static const int DAY_MS = 86400000;
-  static const int HOUR_MS = 3600000;
-  static const int MINUTE_MS = 60000;
-  static const int SECOND_MS = 1000;
+  static const int dayMS = 86400000;
+  static const int hourMS = 3600000;
+  static const int minuteMS = 60000;
+  static const int secondMS = 1000;
 }

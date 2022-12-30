@@ -1,7 +1,7 @@
 import '../constants/patterns.dart';
 
 class Regs {
-  static final RegExp numeric = RegExp(Patterns.numeric);
+  static final RegExp digit = RegExp(Patterns.digit);
   static final RegExp letter = RegExp(Patterns.letter);
   static final RegExp email = RegExp(Patterns.email);
   static final RegExp phone = RegExp(Patterns.phone);

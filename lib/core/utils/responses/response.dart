@@ -1,9 +1,8 @@
-import '../constants/base_messages.dart';
-import '../constants/error_code.dart';
+import '../enums/error_code.dart';
 
 class Response<T> {
   final int _requestCode;
-  int? _errorCode = ErrorCode.NONE;
+  ErrorStatus? _errorStatus;
   T? _result;
   String? _feedback;
   dynamic _snapshot;
@@ -58,10 +57,10 @@ class Response<T> {
 
   set result(T? value) => _result = value;
 
-  set errorCode(int value) => _errorCode = value;
+  set errorStatus(ErrorStatus value) => _errorStatus = value;
 
-  Response<T> withErrorCode(int errorCode) {
-    withException(errorCode: errorCode);
+  Response<T> withErrorStatus(ErrorStatus status) {
+    withException(status: status);
     return this;
   }
 
@@ -83,9 +82,9 @@ class Response<T> {
     return this;
   }
 
-  Response<T> withException({int errorCode = 0, String? exception}) {
-    _errorCode = errorCode;
-    _exception = errorCode != 0 ? message(errorCode) : exception ?? '';
+  Response<T> withException({ErrorStatus? status, String? exception}) {
+    _errorStatus = status;
+    _exception = status != null ? status.message : exception ?? '';
     _feedback = null;
     _complete = true;
     _loaded = true;
@@ -161,48 +160,15 @@ class Response<T> {
     return this;
   }
 
-  String message([int code = 0]) {
-    if (code != 0) {
-      switch (code) {
-        case ErrorCode.CANCELED:
-          _cancel = true;
-          return BaseMessage.EXCEPTION_PROCESS_CANCELED;
-        case ErrorCode.FAILURE:
-          _failed = true;
-          return BaseMessage.EXCEPTION_PROCESS_FAILED;
-        case ErrorCode.NETWORK_UNAVAILABLE:
-          _internetError = true;
-          _valid = false;
-          return BaseMessage.EXCEPTION_INTERNET_DISCONNECTED;
-        case ErrorCode.NULLABLE_OBJECT:
-          _nullableObject = true;
-          return BaseMessage.EXCEPTION_RESULT_NOT_VALID;
-        case ErrorCode.PAUSED:
-          _paused = true;
-          return BaseMessage.EXCEPTION_PROCESS_PAUSED;
-        case ErrorCode.RESULT_NOT_FOUND:
-          return BaseMessage.EXCEPTION_RESULT_NOT_FOUND;
-        case ErrorCode.STOPPED:
-          _stopped = true;
-          return BaseMessage.EXCEPTION_PROCESS_STOPPED;
-        case ErrorCode.TIME_OUT:
-          _timeout = true;
-          return BaseMessage.EXCEPTION_TRY_AGAIN;
-        default:
-          return _exception ?? '';
-      }
-    } else {
-      return _exception ?? '';
-    }
-  }
-
   Snapshot? getSnapshot<Snapshot>() => _snapshot is Snapshot ? _snapshot : null;
 
   T? get result => _result is T ? _result as T : null;
 
   int get requestCode => _requestCode;
 
-  int get errorCode => _errorCode ?? ErrorCode.NONE;
+  int get errorCode => (_errorStatus ?? ErrorStatus.NONE).code;
+
+  String get errorMessage => (_errorStatus ?? ErrorStatus.NONE).message;
 
   String get feedback => _feedback ?? '';
 

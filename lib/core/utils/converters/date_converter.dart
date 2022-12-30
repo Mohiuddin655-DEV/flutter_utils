@@ -62,9 +62,9 @@ class DateConverter {
     final int currentMS = time.millisecond;
     final int tempMS = currentMS - ms;
 
-    const int dayMS = TimeConstrains.DAY_MS;
-    const int hourMS = TimeConstrains.HOUR_MS;
-    const int minuteMS = TimeConstrains.MINUTE_MS;
+    const int dayMS = TimeConstrains.dayMS;
+    const int hourMS = TimeConstrains.hourMS;
+    const int minuteMS = TimeConstrains.minuteMS;
 
     final double minuteCount = tempMS / minuteMS;
 
@@ -84,17 +84,17 @@ class DateConverter {
     final int currentMS = time.millisecond;
     final int tempMS = currentMS - ms;
 
-    final double secondCount = tempMS / TimeConstrains.SECOND_MS;
-    final double minuteCount = tempMS / TimeConstrains.MINUTE_MS;
-    final double hourCount = tempMS / TimeConstrains.HOUR_MS;
+    final double secondCount = tempMS / TimeConstrains.secondMS;
+    final double minuteCount = tempMS / TimeConstrains.minuteMS;
+    final double hourCount = tempMS / TimeConstrains.hourMS;
 
-    if (tempMS < TimeConstrains.SECOND_MS) {
+    if (tempMS < TimeConstrains.secondMS) {
       return "Now";
-    } else if (tempMS < TimeConstrains.MINUTE_MS) {
+    } else if (tempMS < TimeConstrains.minuteMS) {
       return "$secondCount second ago";
-    } else if (tempMS < TimeConstrains.HOUR_MS) {
+    } else if (tempMS < TimeConstrains.hourMS) {
       return "$minuteCount minute ago";
-    } else if (tempMS < TimeConstrains.DAY_MS) {
+    } else if (tempMS < TimeConstrains.dayMS) {
       return "$hourCount hour ago";
     } else {
       return time.text(format);
@@ -112,9 +112,9 @@ class DateConverter {
     final int tempMS = currentMS - ms;
 
     double initTime;
-    const int day = TimeConstrains.DAY_MS;
-    const int hour = TimeConstrains.HOUR_MS;
-    const int minute = TimeConstrains.MINUTE_MS;
+    const int day = TimeConstrains.dayMS;
+    const int hour = TimeConstrains.hourMS;
+    const int minute = TimeConstrains.minuteMS;
 
     if (tempMS < minute) {
       return "Now";

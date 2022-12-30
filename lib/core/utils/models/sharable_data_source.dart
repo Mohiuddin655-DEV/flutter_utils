@@ -14,7 +14,7 @@ class SharableDataSource {
   List<String>? _bccAddresses;
   List<String>? _ccAddresses;
 
-  SharableDataSource([this._type = ShareType.PLAIN_TEXT]);
+  SharableDataSource([this._type = ShareType.text]);
 
   ShareType get type => _type;
 
