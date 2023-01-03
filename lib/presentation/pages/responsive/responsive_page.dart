@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/widgets/responsive_body_provider.dart';
 
 import '../../../core/utils/device.dart';
 import '../../../core/utils/device_config.dart';
@@ -30,9 +31,58 @@ class ResponsivePage extends StatelessWidget {
           title: 'Laptop Body',
           color: Colors.blue.shade300,
         ),
-        desktopBody: Body(
-          title: 'Desktop Body',
-          color: Colors.deepPurple.shade300,
+        desktopBody: ResponsiveBodyProvider(
+          detectChild: true,
+          builder: (context, config) {
+            return [
+              Container(
+                width: 500,
+                color: Colors.red.shade300,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        config.fontSize(24).toStringAsFixed(0),
+                        style: TextStyle(
+                          fontSize: config.fontSize(24),
+                        ),
+                      ),
+                      const Text(
+                        "24",
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: 100,
+                color: Colors.grey.shade300,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        config.fontSize(24).toStringAsFixed(0),
+                        style: TextStyle(
+                          fontSize: config.fontSize(24),
+                        ),
+                      ),
+                      const Text(
+                        "24",
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ];
+          },
         ),
         tvBody: Body(
           title: 'TV Body',

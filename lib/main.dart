@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/presentation/pages/size_config/size_config_body.dart';
+import 'package:flutter_utils/presentation/pages/responsive/responsive_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SizeConfigBody(),
+      home: const ResponsivePage(),
     );
   }
 }

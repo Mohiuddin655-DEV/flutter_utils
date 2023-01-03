@@ -15,23 +15,13 @@ class Device extends Size {
   @override
   double get height => super.height > 100 ? super.height : super.height * 100;
 
-  double rationalWidth(double cx) {
-    return cx * aspectRatio;
-  }
+  double rationalWidth(double cx) => cx * aspectRatio;
 
-  double rationalHeight(double cy) {
-    return cy * aspectRatio;
-  }
+  double rationalHeight(double cy) => cy * aspectRatio;
 
-  double ratioX(double cx) {
-    return rationalWidth(cx) / 100;
-  }
+  double ratioX(double cx) => rationalWidth(cx) / 100;
 
-  double ratioY(double cy) {
-    return rationalHeight(cy) / 100;
-  }
+  double ratioY(double cy) => rationalHeight(cy) / 100;
 
-  double ratio(double cx, double cy) {
-    return Size(cx, cy).aspectRatio;
-  }
+  double ratio(double cx, double cy) => Size(cx, cy).aspectRatio;
 }

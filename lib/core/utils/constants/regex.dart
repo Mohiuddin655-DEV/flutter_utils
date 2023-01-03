@@ -1,5 +1,5 @@
 class Regex {
-  static const clear = <String>[
+  static const List<String> none = [
     "!",
     "@",
     "#",
@@ -26,7 +26,7 @@ class Regex {
     ".",
   ];
 
-  static const slash = <String>[
+  static const List<String> slash = [
     " ",
     "\"",
     "'",

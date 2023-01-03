@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/widgets/responsive_body.dart';
 
 class Body extends StatelessWidget {
-  final int flex;
   final String title;
   final Color color;
+  final bool detectChild;
+  final bool detectScreen;
+  final int? flex;
 
   const Body({
     Key? key,
-    this.flex = 1,
+    this.flex,
+    this.detectChild = false,
+    this.detectScreen = false,
     required this.title,
     this.color = Colors.white,
   }) : super(key: key);
@@ -18,6 +22,8 @@ class Body extends StatelessWidget {
     return ResponsiveBody(
       flex: flex,
       background: color,
+      detectChild: detectChild,
+      detectScreen: detectScreen,
       builder: (context, config) {
         print(config.size);
         return Center(
@@ -26,8 +32,8 @@ class Body extends StatelessWidget {
             child: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: config.space(40),
-                  vertical: config.space(24),
+                  horizontal: config.pixel(40),
+                  vertical: config.pixel(24),
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.3),

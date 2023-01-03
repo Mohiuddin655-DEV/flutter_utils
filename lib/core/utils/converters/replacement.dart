@@ -7,7 +7,7 @@ class Replacement {
 
   static String auto(String value) {
     for (int index = 0; index < value.length; index++) {
-      for (String reg in Regex.clear) {
+      for (String reg in Regex.none) {
         value = value.replaceAll(reg, "");
       }
       for (String s in Regex.slash) {

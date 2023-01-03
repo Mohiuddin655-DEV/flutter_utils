@@ -27,26 +27,18 @@ class DeviceConfig {
     ),
   });
 
-  bool isMobile(double cx, double cy) {
-    return isDevice(mobile, cx, cy);
-  }
+  bool isMobile(double cx, double cy) => isDevice(mobile, cx, cy);
 
-  bool isTab(double cx, double cy) {
-    return isDevice(tab, cx, cy);
-  }
+  bool isTab(double cx, double cy) => isDevice(tab, cx, cy);
 
-  bool isLaptop(double cx, double cy) {
-    return isDevice(laptop, cx, cy);
-  }
+  bool isLaptop(double cx, double cy) => isDevice(laptop, cx, cy);
 
-  bool isDesktop(double cx, double cy) {
-    return isDevice(desktop, cx, cy);
-  }
+  bool isDesktop(double cx, double cy) => isDevice(desktop, cx, cy);
 
   bool isDevice(Device device, double cx, double cy) {
     final x = device.aspectRatio;
-    print('\n${device.name}\t => X : ${x.toStringAsFixed(2)}');
     final y = device.ratio(cx, cy);
+    print('\n${device.name}\t => X : ${x.toStringAsFixed(2)}');
     print('${device.name}\t => Y : ${y.toStringAsFixed(2)}');
     return x > y;
   }
