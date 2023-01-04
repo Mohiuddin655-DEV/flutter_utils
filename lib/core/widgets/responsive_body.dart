@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/utils/device_config.dart';
 import 'package:flutter_utils/core/utils/size_config.dart';
 
 import '../wrappers/widget_wrapper.dart';
@@ -8,6 +9,7 @@ class ResponsiveBody extends StatefulWidget {
   final FlexFit? fit;
   final Color? background;
   final bool detectChild, detectScreen;
+  final DeviceConfig config;
   final Widget Function(BuildContext context, SizeConfig config) builder;
 
   const ResponsiveBody({
@@ -17,6 +19,7 @@ class ResponsiveBody extends StatefulWidget {
     this.fit,
     this.detectChild = false,
     this.detectScreen = false,
+    this.config = const DeviceConfig(),
     required this.builder,
   }) : super(key: key);
 
@@ -31,6 +34,7 @@ class _ResponsiveBodyState extends State<ResponsiveBody> {
   Widget build(BuildContext context) {
     final config = SizeConfig.of(
       context,
+      config: widget.config,
       detectScreen: widget.detectScreen,
       size: widget.detectChild ? _size : null,
     );
