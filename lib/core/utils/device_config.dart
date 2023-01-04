@@ -8,31 +8,31 @@ class DeviceConfig {
     this.mobile = const Device(
       x: DeviceInfo.mobileX,
       y: DeviceInfo.mobileY,
-      fontVariant: DeviceInfo.mobileFontVariant,
+      variant: DeviceInfo.mobileVariant,
       name: 'Mobile',
     ),
     this.tab = const Device(
       x: DeviceInfo.tabX,
       y: DeviceInfo.tabY,
-      fontVariant: DeviceInfo.tabFontVariant,
+      variant: DeviceInfo.tabVariant,
       name: 'Tab',
     ),
     this.laptop = const Device(
       x: DeviceInfo.laptopX,
       y: DeviceInfo.laptopY,
-      fontVariant: DeviceInfo.laptopFontVariant,
+      variant: DeviceInfo.laptopVariant,
       name: 'Laptop',
     ),
     this.desktop = const Device(
       x: DeviceInfo.desktopX,
       y: DeviceInfo.desktopY,
-      fontVariant: DeviceInfo.desktopFontVariant,
+      variant: DeviceInfo.desktopVariant,
       name: 'Desktop',
     ),
     this.tv = const Device(
       x: DeviceInfo.tvX,
       y: DeviceInfo.tvY,
-      fontVariant: DeviceInfo.tvFontVariant,
+      variant: DeviceInfo.tvVariant,
       name: 'TV',
     ),
   });

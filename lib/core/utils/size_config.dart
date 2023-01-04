@@ -44,17 +44,17 @@ class SizeConfig {
 
   double get _detectedSpace => detectScreen ? _suggestedSpace : width;
 
-  double get _fontVariant {
+  double get _variant {
     if (isTV) {
-      return config.tv.fontVariant;
+      return config.tv.variant;
     } else if (isDesktop) {
-      return config.desktop.fontVariant;
+      return config.desktop.variant;
     } else if (isLaptop) {
-      return config.laptop.fontVariant;
+      return config.laptop.variant;
     } else if (isTab) {
-      return config.tab.fontVariant;
+      return config.tab.variant;
     } else {
-      return config.mobile.fontVariant;
+      return config.mobile.variant;
     }
   }
 
@@ -89,13 +89,13 @@ class SizeConfig {
   double fontSize(double initialSize) => pixel(initialSize);
 
   double pixel(double initialSize) {
-    final x = initialSize / _fontVariant;
+    final x = initialSize / _variant;
     final v = x < 0 ? 1.0 : x;
     return percentageSize(_detectedPixel, v);
   }
 
   double space(double initialSize) {
-    final x = initialSize / _fontVariant;
+    final x = initialSize / _variant;
     final v = x < 0 ? 1.0 : x;
     return percentageSize(_detectedSpace, v);
   }

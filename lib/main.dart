@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/presentation/pages/responsive/responsive_page.dart';
+import 'package:flutter_utils/sample.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ResponsivePage(),
+      home: const Simple(),
     );
   }
 }
