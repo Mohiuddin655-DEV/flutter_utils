@@ -2,28 +2,38 @@ import 'device.dart';
 import 'device_info.dart';
 
 class DeviceConfig {
-  final Device mobile, tab, laptop, desktop;
+  final Device mobile, tab, laptop, desktop, tv;
 
   const DeviceConfig({
     this.mobile = const Device(
       x: DeviceInfo.mobileX,
       y: DeviceInfo.mobileY,
+      fontVariant: DeviceInfo.mobileFontVariant,
       name: 'Mobile',
     ),
     this.tab = const Device(
       x: DeviceInfo.tabX,
       y: DeviceInfo.tabY,
+      fontVariant: DeviceInfo.tabFontVariant,
       name: 'Tab',
     ),
     this.laptop = const Device(
       x: DeviceInfo.laptopX,
       y: DeviceInfo.laptopY,
+      fontVariant: DeviceInfo.laptopFontVariant,
       name: 'Laptop',
     ),
     this.desktop = const Device(
       x: DeviceInfo.desktopX,
       y: DeviceInfo.desktopY,
+      fontVariant: DeviceInfo.desktopFontVariant,
       name: 'Desktop',
+    ),
+    this.tv = const Device(
+      x: DeviceInfo.tvX,
+      y: DeviceInfo.tvY,
+      fontVariant: DeviceInfo.tvFontVariant,
+      name: 'TV',
     ),
   });
 

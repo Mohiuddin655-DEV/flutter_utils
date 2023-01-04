@@ -2,11 +2,13 @@ import 'dart:ui';
 
 class Device extends Size {
   final String name;
+  final double fontVariant;
 
   const Device({
     required double x,
     required double y,
     this.name = 'Unknown',
+    this.fontVariant = 0,
   }) : super(x, y);
 
   @override
