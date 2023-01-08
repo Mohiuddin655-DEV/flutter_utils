@@ -18,15 +18,20 @@ class Simple extends StatelessWidget {
 }
 
 class HItems extends StatelessWidget {
-  const HItems({Key? key}) : super(key: key);
+  final bool responsive;
+
+  const HItems({
+    Key? key,
+    this.responsive = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final config = SizeConfig(context);
     return SizedBox(
-      height: config.pixel(224),
+      height: responsive ? config.pixel(224) : 196.5,
       child: ListView.separated(
-        padding: EdgeInsets.all(config.pixel(12)),
+        //padding: EdgeInsets.all(config.pixel(12),),
         scrollDirection: Axis.horizontal,
         itemBuilder: (c, i) {
           return Item();
@@ -34,9 +39,10 @@ class HItems extends StatelessWidget {
         itemCount: 10,
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(
-            width: config.pixel(12),
-            height: config.pixel(12),
-          );
+              //width: config.pixel(12),
+              //height: config.pixel(12),
+              //width: 12, height: 12,
+              );
         },
       ),
     );
@@ -58,7 +64,12 @@ class VItems extends StatelessWidget {
 }
 
 class Item extends StatelessWidget {
-  const Item({Key? key}) : super(key: key);
+  final bool responsive;
+
+  const Item({
+    Key? key,
+    this.responsive = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,24 +78,36 @@ class Item extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
         borderRadius: BorderRadius.circular(
-          config.pixel(100),
+          responsive ? config.pixel(100) : 100,
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      width: config.pixel(200),
+      width: responsive ? config.pixel(196.5) : 196.5,
       child: Stack(
         children: [
           Center(
-            child: Text(
-              config.fontSize(24).toStringAsFixed(2),
-              style: TextStyle(
-                fontSize: config.fontSize(24),
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  config.fontSize(24).toStringAsFixed(10),
+                  style: TextStyle(
+                    fontSize: config.fontSize(24),
+                  ),
+                  maxLines: 1,
+                ),
+                const Text(
+                  "24",
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
             color: Colors.black,
-            height: config.pixel(50),
+            height: responsive ? config.pixel(50) : 50,
           ),
         ],
       ),

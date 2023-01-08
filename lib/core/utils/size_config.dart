@@ -5,11 +5,13 @@ class SizeConfig {
   final BuildContext context;
   final DeviceConfig config;
   final bool detectScreen;
+  final bool detectVariant;
   final Size? _requireSize;
 
-  const SizeConfig(
+  const SizeConfig._(
     this.context, [
     this.detectScreen = false,
+    this.detectVariant = false,
     this.config = const DeviceConfig(),
     this._requireSize,
   ]);
@@ -17,10 +19,11 @@ class SizeConfig {
   static SizeConfig of(
     BuildContext context, {
     bool detectScreen = false,
+    bool detectVariant = false,
     DeviceConfig config = const DeviceConfig(),
     Size? size,
   }) {
-    return SizeConfig(context, detectScreen, config, size);
+    return SizeConfig._(context, detectScreen, detectVariant, config, size);
   }
 
   Size get size => _requireSize ?? MediaQuery.of(context).size;
@@ -29,14 +32,23 @@ class SizeConfig {
 
   double get height => size.height;
 
-  bool get isMobile => width <= config.mobile.width;
+  bool get isMobile =>
+      config.isMobile(width, height); //width <= config.mobile.width;
 
-  bool get isTab => width > config.mobile.width && width <= config.tab.width;
+  bool get isTab => config.isTab(
+        width,
+        height,
+      ); //width > config.mobile.width && width <= config.tab.width;
 
-  bool get isLaptop => width > config.tab.width && width <= config.laptop.width;
+  bool get isLaptop => config.isLaptop(
+        width,
+        height,
+      ); //width > config.tab.width && width <= config.laptop.width;
 
-  bool get isDesktop =>
-      width > config.laptop.width && width <= config.desktop.width;
+  bool get isDesktop => config.isDesktop(
+        width,
+        height,
+      ); //width > config.laptop.width && width <= config.desktop.width;
 
   bool get isTV => width > config.desktop.width;
 
@@ -45,14 +57,18 @@ class SizeConfig {
   double get _detectedSpace => detectScreen ? _suggestedSpace : width;
 
   double get _variant {
-    if (isTV) {
-      return config.tv.variant;
-    } else if (isDesktop) {
-      return config.desktop.variant;
-    } else if (isLaptop) {
-      return config.laptop.variant;
-    } else if (isTab) {
-      return config.tab.variant;
+    if (detectVariant) {
+      if (isMobile) {
+        return config.mobile.variant;
+      } else if (isTab) {
+        return config.tab.variant;
+      } else if (isLaptop) {
+        return config.laptop.variant;
+      } else if (isDesktop) {
+        return config.desktop.variant;
+      } else {
+        return config.tv.variant;
+      }
     } else {
       return config.mobile.variant;
     }
