@@ -27,7 +27,7 @@ class HItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = SizeConfig(context);
+    final config = SizeConfig.of(context);
     return SizedBox(
       height: responsive ? config.pixel(224) : 196.5,
       child: ListView.separated(
