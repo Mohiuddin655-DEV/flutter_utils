@@ -49,6 +49,9 @@ dependencies:
   fluttertoast: ^8.1.2
   flutter_smart_dialog: ^4.8.0
   firebase_database: ^10.0.9
+  video_player: ^2.4.10
+  pod_player: ^0.1.0
+  link_preview_generator: ^1.2.0
 
 dev_dependencies:
   flutter_test:

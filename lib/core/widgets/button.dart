@@ -6,7 +6,7 @@ class Button extends StatelessWidget {
   final double borderRadius;
   final EdgeInsetsGeometry? margin, padding;
   final MaterialStateProperty<Color?>? background;
-  final VoidCallback? onClick;
+  final Function()? onClick;
 
   const Button({
     Key? key,
