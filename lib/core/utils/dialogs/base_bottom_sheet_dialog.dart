@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/dialogs/loading_dialog.dart';
+import 'package:flutter_utils/core/utils/dialogs/media_dialog.dart';
 
-class BaseBottomSheetDialog extends LoadingDialog {
+class BaseBottomSheetDialog extends MediaDialog {
   const BaseBottomSheetDialog(super.context);
 
   void buildBSD(

@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_utils/core/utils/dialogs/base_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/utils/dialogs/share_dialog.dart';
 
 import '../callbacks/on_data_changed_listener.dart';
 
-class OptionDialog extends BaseDialog {
+class OptionDialog extends ShareDialog {
   const OptionDialog(super.context);
 
   void options(

@@ -6,6 +6,6 @@ class DialogHelper {
   const DialogHelper(this.context);
 }
 
-abstract class OnDataChangeListener<T> {
+abstract class OnValueChangeListener<T> {
   void onChange(T t);
 }

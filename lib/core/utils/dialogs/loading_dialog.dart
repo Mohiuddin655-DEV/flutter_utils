@@ -1,6 +1,6 @@
-import 'package:flutter_utils/core/utils/dialogs/base_dialog.dart';
+import 'package:flutter_utils/core/utils/dialogs/option_dialog.dart';
 
-class LoadingDialog extends BaseDialog {
+class LoadingDialog extends OptionDialog {
   const LoadingDialog(super.context);
 
   void load(

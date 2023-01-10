@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/dialogs/media_dialog.dart';
+import 'package:flutter_utils/core/utils/dialogs/loading_dialog.dart';
 import 'package:flutter_utils/core/utils/dialogs/share_dialog.dart';
 import 'package:flutter_utils/core/utils/enums/share_type.dart';
 import 'package:flutter_utils/core/utils/models/sharable_data_source.dart';
@@ -13,7 +13,7 @@ class Simple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dialog = MediaDialog(context);
+    final dialog = LoadingDialog(context);
     return Scaffold(
       body: Center(
         child: Container(
@@ -23,16 +23,9 @@ class Simple extends StatelessWidget {
             width: 200,
             text: "Click",
             onClick: () {
-              print("Hi");
-              dialog.media(
-                //type: MediaType.video,
-                url:
-                    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-                borderRadius: 12,
-                borderSize: 2,
-                title: "আমাদের গল্প",
-                //body: "তথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়।",
-                body: "তথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়। \n\nতথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়।\n\nতথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়। \n\nতথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়।\n\nতথ্য ও প্রযুক্তি আমাদের দৈনন্দিন জীবনের গুরুত্বপূর্ণ অংশ হয়ে গেছে, কিন্তু শিক্ষা ক্ষেত্রে এখনও গতানুগতিক ধারাটিই রয়ে গেছে। Shikho মনে করে বাংলাদেশের শিক্ষা ক্ষেত্রে প্রযুক্তির বিপ্লব ঘটানোর এখনই উপযুক্ত সময়।",
+              dialog.alert(
+                "Something went wrong, please try again?",
+                (value) => print(value),
               );
             },
             //onClick: MessageDialog.message("Hi"),
