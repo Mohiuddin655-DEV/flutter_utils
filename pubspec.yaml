@@ -52,6 +52,8 @@ dependencies:
   video_player: ^2.4.10
   pod_player: ^0.1.0
   link_preview_generator: ^1.2.0
+  share: ^2.0.4
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:

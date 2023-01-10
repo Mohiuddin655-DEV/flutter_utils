@@ -1,7 +1,9 @@
 import 'package:fluttertoast/fluttertoast.dart' as t;
 
 class Toast {
-  static void message(String message, {bool isLong = false}) {
+  const Toast();
+
+  void toast(String message, {bool isLong = false}) {
     if (message.isNotEmpty) {
       if (isLong) {
         t.Fluttertoast.showToast(
@@ -17,5 +19,9 @@ class Toast {
         );
       }
     }
+  }
+
+  static void message(String message, {bool isLong = false}) {
+    return const Toast().toast(message, isLong: isLong);
   }
 }

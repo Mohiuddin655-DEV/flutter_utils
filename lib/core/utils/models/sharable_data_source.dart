@@ -6,90 +6,57 @@ class SharableDataSource {
   String? _chooserTitle;
   String? _subject;
   String? _text;
-  String? _htmlText;
-  String? _uid;
-  Uri? _stream;
-  List<Uri>? _streams;
-  List<String>? _toAddresses;
-  List<String>? _bccAddresses;
-  List<String>? _ccAddresses;
+  List<String> _paths = [];
+  List<String>? _mimeTypes;
 
   SharableDataSource([this._type = ShareType.text]);
-
-  ShareType get type => _type;
 
   SharableDataSource setType(ShareType type) {
     _type = type;
     return this;
   }
 
-  String get chooserTitle => _chooserTitle ?? "Share to...";
-
   SharableDataSource setChooserTitle(String chooserTitle) {
     _chooserTitle = chooserTitle;
     return this;
   }
-
-  String? get subject => _subject;
 
   SharableDataSource setSubject(String subject) {
     _subject = subject;
     return this;
   }
 
-  String? get text => _text;
-
   SharableDataSource setText(String text) {
     _text = text;
     return this;
   }
 
-  String? get htmlText => _htmlText;
-
-  SharableDataSource setHtmlText(String htmlText) {
-    _htmlText = htmlText;
+  SharableDataSource setPath(String path) {
+    _paths.insert(0, path);
     return this;
   }
 
-  String? get uid => _uid;
-
-  SharableDataSource setUid(String uid) {
-    _uid = uid;
+  SharableDataSource setPaths(List<String> paths) {
+    _paths = paths;
     return this;
   }
 
-  Uri? get stream => _stream;
-
-  SharableDataSource setStream(Uri stream) {
-    _stream = stream;
+  SharableDataSource setMimeTypes(List<String> mimeTypes) {
+    _mimeTypes = mimeTypes;
     return this;
   }
 
-  List<Uri>? get streams => _streams;
+  ShareType get type => _type;
 
-  SharableDataSource setStreams(List<Uri> streams) {
-    _streams = streams;
-    return this;
-  }
+  String get chooserTitle => _chooserTitle ?? "Share to...";
 
-  List<String>? get toAddresses => _toAddresses;
+  String? get subject => _subject;
 
-  SharableDataSource setToAddresses(List<String> toAddresses) {
-    _toAddresses = toAddresses;
-    return this;
-  }
+  String? get text => _text;
 
-  List<String>? get bccAddresses => _bccAddresses;
+  String? get path => paths.isNotEmpty ? paths[0] : null;
 
-  SharableDataSource setBccAddresses(List<String> bccAddresses) {
-    _bccAddresses = bccAddresses;
-    return this;
-  }
+  List<String> get paths => _paths;
 
-  List<String>? get ccAddresses => _ccAddresses;
-
-  SharableDataSource setCcAddresses(List<String> ccAddresses) {
-    _ccAddresses = ccAddresses;
-    return this;
-  }
+  List<String>? get mimeTypes => _mimeTypes;
 }
