@@ -32,6 +32,8 @@ class SizeConfig {
 
   double get height => size.height;
 
+  bool get isLandscapeMode => !(isMobile || isTab);
+
   bool get isMobile =>
       config.isMobile(width, height); //width <= config.mobile.width;
 
@@ -104,14 +106,14 @@ class SizeConfig {
 
   double fontSize(double initialSize) => pixel(initialSize);
 
-  double pixel(double initialSize) {
-    final x = initialSize / _variant;
+  double pixel(double? initialSize) {
+    final x = (initialSize ?? 0) / _variant;
     final v = x < 0 ? 1.0 : x;
     return percentageSize(_detectedPixel, v);
   }
 
-  double space(double initialSize) {
-    final x = initialSize / _variant;
+  double space(double? initialSize) {
+    final x = (initialSize ?? 0) / _variant;
     final v = x < 0 ? 1.0 : x;
     return percentageSize(_detectedSpace, v);
   }

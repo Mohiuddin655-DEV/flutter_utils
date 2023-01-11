@@ -2,32 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/utils/size_config.dart';
 import 'package:pod_player/pod_player.dart';
 
-class VideoView extends StatefulWidget {
+class StreamVideoView extends StatefulWidget {
+  final String videoUrl;
   final bool loopingEnable;
   final bool autoPlay;
   final double? borderRadius;
   final double? width, height;
   final double? space;
-  final dynamic video;
-  final VideoType videoType;
 
-  const VideoView({
+  const StreamVideoView({
     Key? key,
+    required this.videoUrl,
     this.autoPlay = true,
     this.loopingEnable = false,
     this.borderRadius,
     this.width,
     this.height,
     this.space,
-    this.video,
-    this.videoType = VideoType.none,
   }) : super(key: key);
 
   @override
-  State<VideoView> createState() => _VideoViewState();
+  State<StreamVideoView> createState() => _StreamVideoViewState();
 }
 
-class _VideoViewState extends State<VideoView> {
+class _StreamVideoViewState extends State<StreamVideoView> {
   late PodPlayerController _controller;
   late Size size = MediaQuery.of(context).size;
 
@@ -39,25 +37,8 @@ class _VideoViewState extends State<VideoView> {
         autoPlay: widget.autoPlay,
         isLooping: widget.loopingEnable,
       ),
-      playVideoFrom: player,
+      playVideoFrom: PlayVideoFrom.network(widget.videoUrl),
     )..initialise();
-  }
-
-  PlayVideoFrom get player {
-    final video = widget.video ?? '';
-    switch (widget.videoType) {
-      case VideoType.asset:
-        return PlayVideoFrom.asset(video);
-      case VideoType.file:
-        return PlayVideoFrom.file(video);
-      case VideoType.vimeo:
-        return PlayVideoFrom.vimeo(video);
-      case VideoType.youtube:
-        return PlayVideoFrom.youtube(video);
-      case VideoType.none:
-      default:
-        return PlayVideoFrom.network(video);
-    }
   }
 
   @override
@@ -80,6 +61,7 @@ class _VideoViewState extends State<VideoView> {
       ),
       margin: EdgeInsets.all(config.pixel(widget.space)),
       child: PodVideoPlayer(
+        backgroundColor: Colors.black,
         controller: _controller,
       ),
     );
@@ -96,12 +78,4 @@ class _VideoViewState extends State<VideoView> {
   void onPause() => _controller.pause();
 
   void onPlay() => _controller.play();
-}
-
-enum VideoType {
-  none,
-  asset,
-  file,
-  youtube,
-  vimeo,
 }

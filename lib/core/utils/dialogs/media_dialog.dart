@@ -13,6 +13,8 @@ class MediaDialog extends LoadingDialog {
     int transparency = 0,
     double? width,
     double? height,
+    double? mediaWidth,
+    double? mediaHeight,
     double? borderRadius,
     double? titlePaddingX,
     double? titlePaddingY,
@@ -27,29 +29,33 @@ class MediaDialog extends LoadingDialog {
     Color? bodyColor,
     bool? dismissible,
     Color? background,
-    String url = '',
-    MediaType type = MediaType.none,
+    dynamic media,
+    MediaType mediaType = MediaType.none,
+    VideoType videoType = VideoType.none,
   }) {
     build(
       dismissible: dismissible,
       background: background,
       child: _View(
-        type: type,
+        mediaType: mediaType,
         width: width,
         height: height,
+        mediaWidth: mediaWidth,
+        mediaHeight: mediaHeight,
         borderRadius: borderRadius,
         titlePaddingX: titlePaddingX,
         titlePaddingY: titlePaddingY,
         iconSize: iconSize,
         borderSize: borderSize,
-        title: title,
+        title: title ?? '',
         titleAlign: titleAlign,
         titleSize: titleSize,
         body: body,
         bodySize: bodySize,
         titleColor: titleColor,
         bodyColor: bodyColor,
-        url: url,
+        media: media,
+        videoType: videoType,
         onDismiss: dismiss,
       ),
     );
@@ -57,12 +63,13 @@ class MediaDialog extends LoadingDialog {
 }
 
 class _View extends StatelessWidget {
-  final MediaType type;
+  final MediaType mediaType;
   final double? width, height;
+  final double? mediaWidth, mediaHeight;
   final double? borderRadius;
   final double? titlePaddingX, titlePaddingY;
   final double? iconSize;
-  final String? title;
+  final String title;
   final AlignmentGeometry? titleAlign;
   final Color? titleColor;
   final double? titleSize;
@@ -70,18 +77,21 @@ class _View extends StatelessWidget {
   final String? body;
   final Color? bodyColor;
   final double? bodySize;
-  final String url;
+  final dynamic media;
+  final VideoType videoType;
   final Function()? onDismiss;
 
   const _View({
     Key? key,
-    this.type = MediaType.none,
+    this.mediaType = MediaType.none,
     this.width,
     this.height,
+    this.mediaWidth,
+    this.mediaHeight,
     this.borderRadius = 24,
     this.titlePaddingX,
     this.titlePaddingY,
-    this.title,
+    this.title = '',
     this.titleAlign,
     this.titleColor,
     this.titleSize,
@@ -90,7 +100,8 @@ class _View extends StatelessWidget {
     this.body,
     this.bodyColor,
     this.bodySize,
-    this.url = '',
+    this.media,
+    this.videoType = VideoType.none,
     this.onDismiss,
   }) : super(key: key);
 
@@ -112,20 +123,26 @@ class _View extends StatelessWidget {
         ),
         child: ResponsiveLayout(
           mobileBody: PortraitMode(
-            type: type,
-            url: url,
+            mediaType: mediaType,
+            video: media,
+            videoType: videoType,
             title: title,
             titleAlign: titleAlign,
             titleColor: titleColor,
             titleSize: titleSize,
+            mediaWidth: mediaWidth,
+            mediaHeight: mediaHeight,
             body: body,
             bodyColor: bodyColor,
             bodySize: bodySize,
             onDismiss: onDismiss,
           ),
           desktopBody: LandscapeMode(
-            type: type,
-            url: url,
+            mediaType: mediaType,
+            mediaWidth: mediaWidth,
+            mediaHeight: mediaHeight,
+            video: media,
+            videoType: videoType,
             title: title,
             titleAlign: titleAlign ?? Alignment.center,
             titleColor: titleColor,
@@ -142,7 +159,8 @@ class _View extends StatelessWidget {
 }
 
 class PortraitMode extends StatelessWidget {
-  final MediaType type;
+  final MediaType mediaType;
+  final VideoType videoType;
   final String? title;
   final AlignmentGeometry? titleAlign;
   final Color? titleColor;
@@ -150,14 +168,16 @@ class PortraitMode extends StatelessWidget {
   final String? body;
   final Color? bodyColor;
   final double? bodySize;
-  final String url;
+  final double? mediaWidth, mediaHeight;
+  final dynamic video;
   final double? iconSize;
   final EdgeInsetsGeometry? padding;
   final Function()? onDismiss;
 
   const PortraitMode({
     Key? key,
-    this.type = MediaType.none,
+    this.mediaType = MediaType.none,
+    this.videoType = VideoType.none,
     this.title,
     this.titleAlign,
     this.titleColor,
@@ -165,7 +185,9 @@ class PortraitMode extends StatelessWidget {
     this.body,
     this.bodyColor,
     this.bodySize,
-    this.url = '',
+    this.video,
+    this.mediaWidth,
+    this.mediaHeight,
     this.iconSize,
     this.padding,
     this.onDismiss,
@@ -188,21 +210,24 @@ class PortraitMode extends StatelessWidget {
           onPressed: onDismiss,
         ),
         const SeparatorLine(height: 1),
-        OperationView(
-          operation: type,
+        ViewBuilder(
+          component: mediaType,
           builder: (value) {
             if (value == MediaType.video) {
               return VideoView(
+                videoType: videoType,
+                width: mediaWidth,
+                height: mediaHeight,
                 loopingEnable: false,
-                videoUrl: url,
+                video: video,
               );
             } else {
               return null;
             }
           },
         ),
-        OperationView(
-          operation: body != null,
+        ViewBuilder(
+          component: body != null,
           builder: (value) {
             if (value) {
               return Expanded(
@@ -223,30 +248,35 @@ class PortraitMode extends StatelessWidget {
 }
 
 class LandscapeMode extends StatelessWidget {
-  final MediaType type;
-  final String? title;
+  final MediaType mediaType;
+  final VideoType videoType;
+  final String title;
   final AlignmentGeometry? titleAlign;
   final Color? titleColor;
   final double? titleSize;
   final String? body;
   final Color? bodyColor;
   final double? bodySize;
-  final String url;
+  final double? mediaWidth, mediaHeight;
+  final dynamic video;
   final double? iconSize;
   final EdgeInsetsGeometry? padding;
   final Function()? onDismiss;
 
   const LandscapeMode({
     Key? key,
-    this.type = MediaType.none,
-    this.title,
+    required this.title,
     this.titleAlign,
     this.titleColor,
     this.titleSize,
     this.body,
     this.bodyColor,
     this.bodySize,
-    this.url = '',
+    this.mediaType = MediaType.none,
+    this.mediaWidth,
+    this.mediaHeight,
+    this.video,
+    this.videoType = VideoType.none,
     this.iconSize,
     this.padding,
     this.onDismiss,
@@ -254,6 +284,7 @@ class LandscapeMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = SizeConfig.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -268,18 +299,25 @@ class LandscapeMode extends StatelessWidget {
           padding: padding,
           onPressed: onDismiss,
         ),
-        const SeparatorLine(height: 1),
+        SeparatorLine(height: config.pixel(1)),
         Expanded(
           child: Row(
             children: [
-              OperationView(
-                operation: type,
+              ViewBuilder(
+                component: mediaType,
                 builder: (value) {
                   if (value == MediaType.video) {
                     return Expanded(
-                      child: VideoView(
-                        loopingEnable: false,
-                        videoUrl: url,
+                      child: Container(
+                        color: Colors.black,
+                        height: double.infinity,
+                        child: VideoView(
+                          videoType: videoType,
+                          width: mediaWidth,
+                          height: mediaHeight,
+                          loopingEnable: false,
+                          video: video,
+                        ),
                       ),
                     );
                   } else {
@@ -287,8 +325,8 @@ class LandscapeMode extends StatelessWidget {
                   }
                 },
               ),
-              OperationView(
-                operation: body != null,
+              ViewBuilder(
+                component: body != null,
                 builder: (value) {
                   if (value) {
                     return Expanded(

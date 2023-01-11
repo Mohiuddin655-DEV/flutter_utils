@@ -134,8 +134,8 @@ class _View extends StatelessWidget {
                     ),
                   ),
                 ),
-                OperationView(
-                  operation: body != null,
+                ViewBuilder(
+                  component: body != null,
                   builder: (value) {
                     if (value) {
                       return Container(

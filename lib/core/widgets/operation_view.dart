@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class OperationView<T> extends StatelessWidget {
-  final T operation;
+class ViewBuilder<T> extends StatelessWidget {
+  final T component;
   final Widget? Function(T value) builder;
 
-  const OperationView({
+  const ViewBuilder({
     Key? key,
-    required this.operation,
+    required this.component,
     required this.builder,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return builder.call(operation) ?? const SizedBox();
+    return builder.call(component) ?? const SizedBox();
   }
 }
