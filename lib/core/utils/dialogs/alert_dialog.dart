@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/utils/dialogs/message_dialog.dart';
-import 'package:flutter_utils/core/widgets/operation_view.dart';
+import 'package:flutter_utils/core/widgets/view_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomAlertDialog extends MessageDialog {

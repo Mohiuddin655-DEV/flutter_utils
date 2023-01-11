@@ -10,6 +10,7 @@ class VideoView extends StatefulWidget {
   final double? space;
   final dynamic video;
   final VideoType videoType;
+  final PodPlayerController? controller;
 
   const VideoView({
     Key? key,
@@ -20,7 +21,8 @@ class VideoView extends StatefulWidget {
     this.height,
     this.space,
     this.video,
-    this.videoType = VideoType.none,
+    this.controller,
+    this.videoType = VideoType.detect,
   }) : super(key: key);
 
   @override
@@ -34,18 +36,37 @@ class _VideoViewState extends State<VideoView> {
   @override
   void initState() {
     super.initState();
-    _controller = PodPlayerController(
-      podPlayerConfig: PodPlayerConfig(
-        autoPlay: widget.autoPlay,
-        isLooping: widget.loopingEnable,
-      ),
-      playVideoFrom: player,
-    )..initialise();
+    _controller = widget.controller ??
+        PodPlayerController(
+          podPlayerConfig: PodPlayerConfig(
+            autoPlay: widget.autoPlay,
+            isLooping: widget.loopingEnable,
+          ),
+          playVideoFrom: player,
+        )
+      ..initialise();
+  }
+
+  VideoType get type {
+    final video = widget.video;
+    if (video is String) {
+      if (video.contains(VideoType.youtube.value)) {
+        return VideoType.youtube;
+      } else if (video.contains(VideoType.vimeo.value)) {
+        return VideoType.vimeo;
+      } else if (video.contains(VideoType.asset.value)) {
+        return VideoType.asset;
+      } else {
+        return widget.videoType;
+      }
+    } else {
+      return widget.videoType;
+    }
   }
 
   PlayVideoFrom get player {
     final video = widget.video ?? '';
-    switch (widget.videoType) {
+    switch (type) {
       case VideoType.asset:
         return PlayVideoFrom.asset(video);
       case VideoType.file:
@@ -54,7 +75,7 @@ class _VideoViewState extends State<VideoView> {
         return PlayVideoFrom.vimeo(video);
       case VideoType.youtube:
         return PlayVideoFrom.youtube(video);
-      case VideoType.none:
+      case VideoType.detect:
       default:
         return PlayVideoFrom.network(video);
     }
@@ -99,9 +120,13 @@ class _VideoViewState extends State<VideoView> {
 }
 
 enum VideoType {
-  none,
-  asset,
-  file,
-  youtube,
-  vimeo,
+  detect("detect"),
+  asset("assets/"),
+  file("file"),
+  youtube("https://www.youtube.com"),
+  vimeo("https://player.vimeo.com");
+
+  const VideoType(this.value);
+
+  final String value;
 }

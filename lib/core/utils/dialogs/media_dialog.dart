@@ -3,7 +3,7 @@ import 'package:flutter_utils/core/utils/dialogs/loading_dialog.dart';
 import 'package:flutter_utils/core/utils/size_config.dart';
 import 'package:flutter_utils/core/widgets/responsive_layout.dart';
 
-import '../../widgets/operation_view.dart';
+import '../../widgets/view_builder.dart';
 import '../../widgets/video_view.dart';
 
 class MediaDialog extends LoadingDialog {
@@ -31,7 +31,7 @@ class MediaDialog extends LoadingDialog {
     Color? background,
     dynamic media,
     MediaType mediaType = MediaType.none,
-    VideoType videoType = VideoType.none,
+    VideoType videoType = VideoType.detect,
   }) {
     build(
       dismissible: dismissible,
@@ -101,7 +101,7 @@ class _View extends StatelessWidget {
     this.bodyColor,
     this.bodySize,
     this.media,
-    this.videoType = VideoType.none,
+    this.videoType = VideoType.detect,
     this.onDismiss,
   }) : super(key: key);
 
@@ -177,7 +177,7 @@ class PortraitMode extends StatelessWidget {
   const PortraitMode({
     Key? key,
     this.mediaType = MediaType.none,
-    this.videoType = VideoType.none,
+    this.videoType = VideoType.detect,
     this.title,
     this.titleAlign,
     this.titleColor,
@@ -276,7 +276,7 @@ class LandscapeMode extends StatelessWidget {
     this.mediaWidth,
     this.mediaHeight,
     this.video,
-    this.videoType = VideoType.none,
+    this.videoType = VideoType.detect,
     this.iconSize,
     this.padding,
     this.onDismiss,
