@@ -32,41 +32,57 @@ class ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: margin,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: borderRadius,
-      ),
-      foregroundDecoration: BoxDecoration(
-        color: foreground,
-        borderRadius: borderRadius,
-      ),
-      child: ViewBuilder(
-        component: cacheMode && type == SrcType.network,
-        builder: (value) {
-          if (value) {
-            return CachedNetworkImage(
-              imageUrl: src,
-              width: width,
-              height: height,
-              fit: fit,
-            );
-          } else {
-            return Image(
-              image: image,
-              width: width,
-              height: height,
-              fit: fit,
-            );
-          }
-        },
-      ),
+    return ViewBuilder(
+      component: margin != null ||
+          background != null ||
+          foreground != null ||
+          borderRadius != null,
+      builder: (value) {
+        if (value) {
+          return Container(
+            margin: margin,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: borderRadius,
+            ),
+            foregroundDecoration: BoxDecoration(
+              color: foreground,
+              borderRadius: borderRadius,
+            ),
+            child: _view,
+          );
+        } else {
+          return _view;
+        }
+      },
     );
   }
 
-  ImageProvider get image {
+  ViewBuilder get _view {
+    return ViewBuilder(
+      component: cacheMode && type == SrcType.network,
+      builder: (value) {
+        if (value) {
+          return CachedNetworkImage(
+            imageUrl: src,
+            width: width,
+            height: height,
+            fit: fit,
+          );
+        } else {
+          return Image(
+            image: _image,
+            width: width,
+            height: height,
+            fit: fit,
+          );
+        }
+      },
+    );
+  }
+
+  ImageProvider get _image {
     switch (type) {
       case SrcType.network:
         return NetworkImage(src);
