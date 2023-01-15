@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/widgets/recycler_view.dart';
+
+import '../../../core/widgets/expensive_grid_view.dart';
 
 class RecyclerViewPage extends StatelessWidget {
   const RecyclerViewPage({Key? key}) : super(key: key);
@@ -7,8 +8,7 @@ class RecyclerViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final items = [
-    ];
+    final items = [];
     final items2 = [
       Colors.red,
       Colors.green,
@@ -38,11 +38,11 @@ class RecyclerViewPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RecyclerView(
+              ExpensiveGridView(
                 direction: Axis.vertical,
-                layoutType: LayoutType.grid,
                 items: items2,
-                snapCount: 2,
+                snapCount: 5,
+                itemCount: 4,
                 builder: (index, item) {
                   return Container(
                     height: 100,
@@ -51,9 +51,8 @@ class RecyclerViewPage extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 40),
-              RecyclerView(
+              ExpensiveGridView(
                 direction: Axis.horizontal,
-                layoutType: LayoutType.grid,
                 items: items2,
                 snapCount: 4,
                 builder: (index, item) {

@@ -30,12 +30,10 @@ class RecyclerView extends StatefulWidget {
 
 class _RecyclerViewState extends State<RecyclerView> {
   int index = 0;
-  List<int> tempIndex = [];
 
   @override
   Widget build(BuildContext context) {
     index = 0;
-    tempIndex.clear();
     return layout;
   }
 
@@ -58,7 +56,6 @@ class _RecyclerViewState extends State<RecyclerView> {
     final line = (itemCount / snapCount).ceil();
     final require = line * snapCount;
     final missing = require - itemCount;
-    print("Missing $missing");
     return missing.abs();
   }
 
@@ -69,11 +66,9 @@ class _RecyclerViewState extends State<RecyclerView> {
           .getRange(0, itemCount)
           .map((e) => ListItem(data: e))
           .toList();
-      final length = widget.items.length;
       if (missingCount > 0) {
         for (int i = 0; i < missingCount; i++) {
-          list.add(const ListItem(isTemporary: true));
-          tempIndex.add(length + i);
+          list.add(const ListItem(temporary: true));
         }
       }
     }
@@ -219,7 +214,7 @@ class _RecyclerViewState extends State<RecyclerView> {
       children: items.getRange(index, end).map((item) {
         index++;
         return ViewBuilder(
-            component: !item.isTemporary,
+            component: !item.temporary,
             builder: (value) => value
                 ? widget.builder.call(
               index,
@@ -249,7 +244,7 @@ class _RecyclerViewState extends State<RecyclerView> {
         index++;
         return Expanded(
           child: ViewBuilder(
-              component: !item.isTemporary,
+              component: !item.temporary,
               builder: (value) => value
                   ? widget.builder.call(
                 index,
@@ -264,11 +259,11 @@ class _RecyclerViewState extends State<RecyclerView> {
 
 class ListItem {
   final dynamic data;
-  final bool isTemporary;
+  final bool temporary;
 
   const ListItem({
     this.data,
-    this.isTemporary = false,
+    this.temporary = false,
   });
 }
 
