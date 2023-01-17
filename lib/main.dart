@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/presentation/pages/recycler_view/recycler_view_page.dart';
+import 'package:flutter_utils/presentation/pages/image_view_checking_page/lottie_view_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const RecyclerViewPage(),
+      home: const LottieViewPage(),
     );
   }
 }

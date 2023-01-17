@@ -30,26 +30,26 @@ class _ExpensiveListViewState extends State<ExpensiveListView> {
     return ViewBuilder(
       component: widget.direction == Axis.horizontal,
       builder: (value) {
-        return value ? horizontal : vertical;
+        return value ? _horizontal : _vertical;
       },
     );
   }
 
-  int get itemCount {
+  int get _itemCount {
     return min(
       widget.itemCount ?? (widget.items.length + 1),
       widget.items.length,
     );
   }
 
-  Widget get horizontal {
+  Widget get _horizontal {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: widget.items.getRange(0, itemCount).map((item) {
+        children: widget.items.getRange(0, _itemCount).map((item) {
           final index = widget.items.indexOf(item);
           return ViewBuilder(
             component: widget.separator != null,
@@ -63,7 +63,7 @@ class _ExpensiveListViewState extends State<ExpensiveListView> {
                       item,
                     ),
                     ViewBuilder(
-                      component: widget.items[itemCount - 1] != item,
+                      component: widget.items[_itemCount - 1] != item,
                       builder: (value) {
                         if (value) {
                           return widget.separator?.call(index, item);
@@ -87,13 +87,13 @@ class _ExpensiveListViewState extends State<ExpensiveListView> {
     );
   }
 
-  Widget get vertical {
+  Widget get _vertical {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: widget.items.getRange(0, itemCount).map((item) {
+        children: widget.items.getRange(0, _itemCount).map((item) {
           final index = widget.items.indexOf(item);
           return ViewBuilder(
             component: widget.separator != null,
@@ -107,7 +107,7 @@ class _ExpensiveListViewState extends State<ExpensiveListView> {
                       item,
                     ),
                     ViewBuilder(
-                      component: widget.items[itemCount - 1] != item,
+                      component: widget.items[_itemCount - 1] != item,
                       builder: (value) {
                         if (value) {
                           return widget.separator?.call(index, item);
@@ -130,4 +130,84 @@ class _ExpensiveListViewState extends State<ExpensiveListView> {
       ),
     );
   }
+
+  Widget get _h => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: widget.items.getRange(0, _itemCount).map((item) {
+          final index = widget.items.indexOf(item);
+          return ViewBuilder(
+            component: widget.separator != null,
+            builder: (value) {
+              if (value) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.builder.call(
+                      index,
+                      item,
+                    ),
+                    ViewBuilder(
+                      component: widget.items[_itemCount - 1] != item,
+                      builder: (value) {
+                        if (value) {
+                          return widget.separator?.call(index, item);
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return widget.builder.call(
+                  index,
+                  item,
+                );
+              }
+            },
+          );
+        }).toList(),
+      );
+
+  Widget get _v => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: widget.items.getRange(0, _itemCount).map((item) {
+          final index = widget.items.indexOf(item);
+          return ViewBuilder(
+            component: widget.separator != null,
+            builder: (value) {
+              if (value) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.builder.call(
+                      index,
+                      item,
+                    ),
+                    ViewBuilder(
+                      component: widget.items[_itemCount - 1] != item,
+                      builder: (value) {
+                        if (value) {
+                          return widget.separator?.call(index, item);
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return widget.builder.call(
+                  index,
+                  item,
+                );
+              }
+            },
+          );
+        }).toList(),
+      );
 }

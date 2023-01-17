@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/widgets/expensive_list_view.dart';
 
 import '../../../core/widgets/expensive_grid_view.dart';
 
@@ -8,8 +9,7 @@ class RecyclerViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final items = [];
-    final items2 = [
+    final items = [
       Colors.red,
       Colors.green,
       Colors.amber,
@@ -40,9 +40,8 @@ class RecyclerViewPage extends StatelessWidget {
             children: [
               ExpensiveGridView(
                 direction: Axis.vertical,
-                items: items2,
+                items: items,
                 snapCount: 5,
-                itemCount: 4,
                 builder: (index, item) {
                   return Container(
                     height: 100,
@@ -53,8 +52,33 @@ class RecyclerViewPage extends StatelessWidget {
               const SizedBox(height: 40),
               ExpensiveGridView(
                 direction: Axis.horizontal,
-                items: items2,
-                snapCount: 4,
+                physics: BouncingScrollPhysics(),
+                items: items,
+                snapCount: 2,
+                builder: (index, item) {
+                  return Container(
+                    height: 100,
+                    width: 150,
+                    color: item,
+                  );
+                },
+              ),
+              const SizedBox(height: 40),
+              ExpensiveListView(
+                direction: Axis.horizontal,
+                items: items,
+                builder: (index, item) {
+                  return Container(
+                    height: 100,
+                    width: 150,
+                    color: item,
+                  );
+                },
+              ),
+              const SizedBox(height: 40),
+              ExpensiveListView(
+                direction: Axis.vertical,
+                items: items,
                 builder: (index, item) {
                   return Container(
                     height: 100,

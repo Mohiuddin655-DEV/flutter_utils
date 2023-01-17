@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../utils/enums/src_type.dart';
 import 'view_builder.dart';
 
-class ImageView extends StatelessWidget {
+class LottieView extends StatelessWidget {
   final dynamic src;
   final SrcType srcType;
   final double? width, height;
@@ -17,7 +17,7 @@ class ImageView extends StatelessWidget {
   final bool cacheMode;
   final BoxFit? fit;
 
-  const ImageView({
+  const LottieView({
     Key? key,
     this.src,
     this.width,
@@ -60,40 +60,24 @@ class ImageView extends StatelessWidget {
     );
   }
 
-  ViewBuilder get _view {
-    return ViewBuilder(
-      component: cacheMode && type == SrcType.network,
-      builder: (value) {
-        if (value) {
-          return CachedNetworkImage(
-            imageUrl: src,
-            width: width,
-            height: height,
-            fit: fit,
-          );
-        } else {
-          return Image(
-            image: _image,
-            width: width,
-            height: height,
-            fit: fit,
-          );
-        }
-      },
-    );
-  }
+  LottieBuilder get _view => LottieBuilder(
+        lottie: _image,
+        width: width,
+        height: height,
+        fit: fit,
+      );
 
-  ImageProvider get _image {
+  LottieProvider get _image {
     switch (type) {
       case SrcType.network:
-        return NetworkImage(src);
+        return NetworkLottie(src);
       case SrcType.file:
-        return FileImage(src);
+        return FileLottie(src);
       case SrcType.memory:
-        return MemoryImage(src);
+        return MemoryLottie(src);
       case SrcType.asset:
       default:
-        return AssetImage("$src");
+        return AssetLottie("$src");
     }
   }
 

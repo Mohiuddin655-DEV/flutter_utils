@@ -8,6 +8,8 @@ class ExpensiveGridView extends StatefulWidget {
   final Axis direction;
   final int? itemCount;
   final int snapCount;
+  final bool scrollingEnabled;
+  final ScrollPhysics? physics;
 
   final Widget Function(int index, dynamic item) builder;
 
@@ -18,6 +20,8 @@ class ExpensiveGridView extends StatefulWidget {
     this.direction = Axis.vertical,
     this.itemCount,
     this.snapCount = 1,
+    this.scrollingEnabled = true,
+    this.physics,
   }) : super(key: key);
 
   @override
@@ -33,7 +37,7 @@ class _ExpensiveGridViewState extends State<ExpensiveGridView> {
     return ViewBuilder(
       component: widget.direction == Axis.horizontal,
       builder: (value) {
-        return value ? horizontalGrid : verticalGrid;
+        return value ? _horizontal : _vertical;
       },
     );
   }
@@ -44,15 +48,15 @@ class _ExpensiveGridViewState extends State<ExpensiveGridView> {
     super.didUpdateWidget(oldWidget);
   }
 
-  List<_Item> get items {
+  List<_Item> get _items {
     List<_Item> list = [];
     if (widget.items.isNotEmpty) {
       list = widget.items
-          .getRange(0, itemCount)
+          .getRange(0, _itemCount)
           .map((e) => _Item(data: e))
           .toList();
-      if (missingCount > 0) {
-        for (int i = 0; i < missingCount; i++) {
+      if (_missingCount > 0) {
+        for (int i = 0; i < _missingCount; i++) {
           list.add(const _Item(temporary: true));
         }
       }
@@ -60,63 +64,93 @@ class _ExpensiveGridViewState extends State<ExpensiveGridView> {
     return list;
   }
 
-  int get itemCount {
+  int get _itemCount {
     return min(
       widget.itemCount ?? (widget.items.length + 1),
       widget.items.length,
     );
   }
 
-  int get snapCount => widget.snapCount;
+  int get _snapCount => widget.snapCount;
 
-  int get missingCount {
-    final line = (itemCount / snapCount).ceil();
-    final require = line * snapCount;
-    final missing = require - itemCount;
+  int get _missingCount {
+    final line = (_itemCount / _snapCount).ceil();
+    final require = line * _snapCount;
+    final missing = require - _itemCount;
     return missing.abs();
   }
 
-  Widget get horizontalGrid {
-    final end = (itemCount / snapCount).ceil();
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: items.getRange(0, end).map((item) {
-          final end = index + (snapCount);
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: items.getRange(index, end).map((item) {
-              index++;
-              return ViewBuilder(
-                  component: !item.temporary,
-                  builder: (value) => value
-                      ? widget.builder.call(
-                          index,
-                          item.data,
-                        )
-                      : null);
-            }).toList(),
+  Widget get _horizontal {
+    return ViewBuilder(
+      component: widget.scrollingEnabled,
+      builder: (value) {
+        if (value) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: widget.physics,
+            child: _h,
           );
-        }).toList(),
-      ),
+        } else {
+          return _h;
+        }
+      },
     );
   }
 
-  Widget get verticalGrid {
-    final end = (itemCount / snapCount).ceil();
+  Widget get _vertical {
+    return ViewBuilder(
+      component: widget.scrollingEnabled,
+      builder: (value) {
+        if (value) {
+          return SingleChildScrollView(
+            physics: widget.physics,
+            child: _v,
+          );
+        } else {
+          return _v;
+        }
+      },
+    );
+  }
+
+  Widget get _h {
+    final end = (_itemCount / _snapCount).ceil();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: _items.getRange(0, end).map((item) {
+        final end = index + (_snapCount);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _items.getRange(index, end).map((item) {
+            index++;
+            return ViewBuilder(
+                component: !item.temporary,
+                builder: (value) => value
+                    ? widget.builder.call(
+                        index,
+                        item.data,
+                      )
+                    : null);
+          }).toList(),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget get _v {
+    final end = (_itemCount / _snapCount).ceil();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: items.getRange(0, end).map((item) {
-        final end = index + (snapCount);
+      children: _items.getRange(0, end).map((item) {
+        final end = index + (_snapCount);
         return Row(
-          children: items.getRange(index, end).map((item) {
+          children: _items.getRange(index, end).map((item) {
             index++;
             return Expanded(
               child: ViewBuilder(

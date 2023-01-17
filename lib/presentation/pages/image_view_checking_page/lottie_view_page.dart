@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/widgets/image_view.dart';
+import 'package:flutter_utils/core/widgets/lottie_view.dart';
 
 import '../../../core/utils/enums/src_type.dart';
 
-class ImageViewPage extends StatelessWidget {
-  const ImageViewPage({Key? key}) : super(key: key);
+class LottieViewPage extends StatelessWidget {
+  const LottieViewPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +12,17 @@ class ImageViewPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: ImageView(
+        child: LottieView(
           src: imageUrl(SrcType.asset),
-          width: size.width * 0.5,
+          width: size.width,
+          height: size.height,
           //margin: const EdgeInsets.all(24),
           //borderRadius: BorderRadius.circular(10),
           //background: Colors.black,
           //foreground: Colors.red.withOpacity(0.5),
           //srcType: SrcType.network,
           //cacheMode: false,
-          fit: BoxFit.cover,
+          //fit: BoxFit.cover,
         ),
       ),
     );
@@ -33,12 +34,14 @@ dynamic imageUrl(SrcType type) {
     case SrcType.detect:
       return "";
     case SrcType.asset:
-      return "assets/images/image.jpeg";
+      return "assets/images/background_shimmer.json";
     case SrcType.file:
       return "";
     case SrcType.memory:
       return "";
     case SrcType.network:
-      return "https://i.ytimg.com/vi/q-OOARyubng/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCC7sEk5GHTRbwOpY8FmeBviVOlaQ";
+      //return "https://assets7.lottiefiles.com/packages/lf20_a7djbqn2.json";
+      //return "https://assets7.lottiefiles.com/packages/lf20_LKXG6QRgtE.json";
+      return "https://assets7.lottiefiles.com/packages/lf20_y6ogyrb1.json";
   }
 }
