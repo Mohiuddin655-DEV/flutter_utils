@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM
+    "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <resources>
+
+        <!--BASE COLORS-->
+        <color name="base_primary">@color/green</color>
+        <color name="base_primary_light">@color/light_green</color>
+        <color name="base_primary_dark">@color/green</color>
+        <color name="base_primary_T25">@color/green_T25</color>
+        <color name="base_primary_T50">@color/green_T50</color>
+        <color name="base_primary_T75">@color/green_T75</color>
+        <color name="base_primary_holo_light">@color/holo_green</color>
+
+        <color name="base_secondary">@color/blue</color>
+        <color name="base_secondary_T25">@color/blue_T25</color>
+        <color name="base_secondary_T50">@color/blue_T50</color>
+        <color name="base_secondary_T75">@color/blue_T75</color>
+        <color name="base_secondary_light">@color/light_blue</color>
+        <color name="base_secondary_holo_light">@color/holo_blue</color>
+
+        <color name="base_activity_background_color">@color/holo_light</color>
+        <color name="base_activity_background_color_dark">@color/black</color>
+        <color name="base_error_finder_background_color">@color/white</color>
+        <color name="base_avatar_background_color">@color/dark_light</color>
+        <color name="base_image_background_color">@color/holo_light</color>
+        <color name="base_status_bar_color">@color/white</color>
+        <color name="base_icon_tint">@color/gray</color>
+
+    </resources>
+</properties>

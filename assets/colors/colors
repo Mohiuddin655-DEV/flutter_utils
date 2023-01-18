@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--BASE COLORS-->
+    <color name="base_primary">@color/green</color>
+    <color name="base_primary_light">@color/light_green</color>
+    <color name="base_primary_dark">@color/green</color>
+    <color name="base_primary_T25">@color/green_T25</color>
+    <color name="base_primary_T50">@color/green_T50</color>
+    <color name="base_primary_T75">@color/green_T75</color>
+    <color name="base_primary_holo_light">@color/holo_green</color>
+
+    <color name="base_secondary">@color/blue</color>
+    <color name="base_secondary_T25">@color/blue_T25</color>
+    <color name="base_secondary_T50">@color/blue_T50</color>
+    <color name="base_secondary_T75">@color/blue_T75</color>
+    <color name="base_secondary_light">@color/light_blue</color>
+    <color name="base_secondary_holo_light">@color/holo_blue</color>
+
+    <color name="base_activity_background_color">@color/holo_light</color>
+    <color name="base_activity_background_color_dark">@color/black</color>
+    <color name="base_error_finder_background_color">@color/white</color>
+    <color name="base_avatar_background_color">@color/dark_light</color>
+    <color name="base_image_background_color">@color/holo_light</color>
+    <color name="base_status_bar_color">@color/white</color>
+    <color name="base_icon_tint">@color/gray</color>
+
+    <!--FINAL COLORS-->
+
+    <color name="transparent">#00000000</color>
+
+    <color name="black">#FF000000</color>
+    <color name="black_T2">#05000000</color>
+    <color name="black_T5">#0D000000</color>
+    <color name="black_T10">#1A000000</color>
+    <color name="black_T15">#26000000</color>
+    <color name="black_T25">#40000000</color>
+    <color name="black_T50">#80000000</color>
+    <color name="black_T75">#BF000000</color>
+    <color name="black_T80">#CC000000</color>
+    <color name="black_T85">#D9000000</color>
+    <color name="black_T90">#E6000000</color>
+    <color name="black_T95">#F2000000</color>
+    <color name="black_T98">#FA000000</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_T2">#05FFFFFF</color>
+    <color name="white_T5">#0DFFFFFF</color>
+    <color name="white_T10">#1AFFFFFF</color>
+    <color name="white_T15">#26FFFFFF</color>
+    <color name="white_T25">#40FFFFFF</color>
+    <color name="white_T50">#80FFFFFF</color>
+    <color name="white_T75">#BFFFFFFF</color>
+    <color name="white_T80">#CCFFFFFF</color>
+    <color name="white_T85">#D9FFFFFF</color>
+    <color name="white_T90">#E6FFFFFF</color>
+    <color name="white_T95">#F2FFFFFF</color>
+    <color name="white_T98">#FAFFFFFF</color>
+
+    <color name="green_T25">#402ECA7F</color>
+    <color name="green_T50">#802ECA7F</color>
+    <color name="green_T75">#BF2ECA7F</color>
+
+    <color name="blue_T25">#4019A4FA</color>
+    <color name="blue_T50">#8019A4FA</color>
+    <color name="blue_T75">#BF19A4FA</color>
+
+    <color name="base_light">#FAFAFA</color>
+    <color name="holo_light">#F2F2F2</color>
+    <color name="dark_light">#EAEAEA</color>
+
+    <color name="light_green">#E6FAF0</color>
+    <color name="holo_green">#8CE4BA</color>
+    <color name="light_green_2">#CFF4E2</color>
+    <color name="green">#2ECA7F</color>
+    <color name="dark_green">#25A165</color>
+    <color name="deep_green">#05140D</color>
+
+    <color name="light_blue">#E8F6FE</color>
+    <color name="holo_blue">#8BD1FC</color>
+    <color name="blue">#19A4FA</color>
+    <color name="dark_blue">#1D89E4</color>
+    <color name="deep_blue">#021019</color>
+
+    <color name="light_gray">#999999</color>
+    <color name="holo_gray">#8C8C8C</color>
+    <color name="gray">#808080</color>
+    <color name="dark_gray">#737373</color>
+    <color name="deep_gray">#666666</color>
+
+    <color name="light_yellow">#FFF9E6</color>
+    <color name="holo_yellow">#FFE083</color>
+    <color name="yellow">#FFC107</color>
+    <color name="dark_yellow">#E6AE07</color>
+    <color name="deep_yellow">#332702</color>
+
+    <color name="light_red">#FEEBEA</color>
+    <color name="holo_red">#FA9F98</color>
+    <color name="red">#F44336</color>
+    <color name="dark_red">#DC3C30</color>
+    <color name="deep_red">#310D0B</color>
+
+</resources>
