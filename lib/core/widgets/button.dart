@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/sources/colors.dart';
+import 'package:flutter_utils/core/utils/configurations/color_config.dart';
 import 'package:flutter_utils/core/utils/extensions/string_helper.dart';
 
 class Button extends StatefulWidget {
@@ -26,13 +26,13 @@ class Button extends StatefulWidget {
 
   final double? width, height;
   final EdgeInsetsGeometry? margin, padding;
-  final Color? background;
+  final ColorState? background;
   final double? borderRadius;
   final bool enabled;
   final String text;
   final TextAlign? textAlign;
   final bool textAllCaps;
-  final Color? textColor;
+  final ColorState? textColor;
   final double? textSize;
   final FontWeight? textStyle;
   final TextOverflow? textOverflow;
@@ -53,7 +53,7 @@ class _ButtonState extends State<Button> {
       height: widget.height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: background,
+        color: background.current(enabled),
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 8),
       ),
       child: Material(
@@ -72,7 +72,7 @@ class _ButtonState extends State<Button> {
               overflow: widget.textOverflow ?? TextOverflow.ellipsis,
               textAlign: widget.textAlign ?? TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: color.current(enabled),
                 fontSize: widget.textSize ?? 16,
                 fontWeight: widget.textStyle,
                 letterSpacing: widget.letterSpacing,
@@ -88,15 +88,26 @@ class _ButtonState extends State<Button> {
 
   bool get enabled => widget.enabled && widget.onClick != null;
 
-  Color get color {
-    final enabledColor = widget.textColor ?? Colors.white;
-    final disabledColor = Colors.grey.shade600;
-    return enabled ? enabledColor : disabledColor;
+  ColorState get color {
+    if (widget.textColor != null) {
+      return widget.textColor!;
+    } else {
+      return ColorState.fromColor(
+        active: Colors.white,
+        inactive: Colors.grey.shade600,
+      );
+    }
   }
 
-  Color get background {
-    final enabledColor = widget.background ?? Theme.of(context).primaryColor;
-    final disabledColor = Color(0xFFFAFAFA);
-    return enabled ? enabledColor : disabledColor;
+  ColorState get background {
+    final bg = widget.background;
+    if (bg != null) {
+      return bg;
+    } else {
+      return ColorState.fromColor(
+        active: Theme.of(context).primaryColor,
+        inactive: const Color(0xFFFAFAFA),
+      );
+    }
   }
 }
