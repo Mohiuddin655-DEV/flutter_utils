@@ -1,29 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
-class SearchView extends StatefulWidget {
+import '../utils/controllers/search_view_controller.dart';
+
+class SearchView<T> extends StatefulWidget {
   final Color primary;
   final String? hint;
-  final TextEditingController? controller;
+  final SearchViewController<T>? controller;
+  final List<T> items;
   final Function(String value)? onChanged;
+  final bool Function(String key, T item)? keyBuilder;
+  final Function(List<T>)? onQueries;
 
   const SearchView({
     Key? key,
     this.primary = Colors.black,
     this.hint,
     this.controller,
+    this.items = const [],
     this.onChanged,
+    this.keyBuilder,
+    this.onQueries,
   }) : super(key: key);
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  State<SearchView> createState() => _SearchViewState<T>();
 }
 
-class _SearchViewState extends State<SearchView> {
+class _SearchViewState<T> extends State<SearchView<T>> {
+  late SearchViewController<T> controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? SearchViewController<T>(widget.items);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      widget.onQueries?.call(widget.items);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 40,
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
       ),
@@ -44,7 +69,11 @@ class _SearchViewState extends State<SearchView> {
               style: TextStyle(
                 color: widget.primary.withOpacity(0.8),
               ),
-              onChanged: widget.onChanged,
+              onChanged: (value) {
+                controller.query = value;
+                widget.onChanged?.call(value);
+                widget.onQueries?.call(items);
+              },
               decoration: InputDecoration(
                 hintText: widget.hint ?? "Search",
                 border: InputBorder.none,
@@ -57,5 +86,17 @@ class _SearchViewState extends State<SearchView> {
         ],
       ),
     );
+  }
+
+  List<T> get items {
+    final list = <T>[];
+    controller.items.map((item) {
+      final valid = widget.keyBuilder?.call(controller.query, item);
+      if (valid ?? false || controller.items.contains(item)) {
+        list.add(item);
+      }
+    }).toList();
+    controller.queries = list;
+    return list;
   }
 }

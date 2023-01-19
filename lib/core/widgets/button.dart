@@ -72,7 +72,7 @@ class _ButtonState extends State<Button> {
               overflow: widget.textOverflow ?? TextOverflow.ellipsis,
               textAlign: widget.textAlign ?? TextAlign.center,
               style: TextStyle(
-                color: AppColors.white,
+                color: Colors.white,
                 fontSize: widget.textSize ?? 16,
                 fontWeight: widget.textStyle,
                 letterSpacing: widget.letterSpacing,
