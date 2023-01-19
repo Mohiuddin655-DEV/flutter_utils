@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_utils/core/utils/device_config.dart';
+
+import 'device_config.dart';
 
 class SizeConfig {
   final BuildContext context;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/size_config.dart';
+import '../../../core/utils/configurations/size_config.dart';
 import 'text_view_with_app_size_config.dart';
 import 'text_view_without_app_size_config.dart';
 

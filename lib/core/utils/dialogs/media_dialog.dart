@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/utils/dialogs/loading_dialog.dart';
-import 'package:flutter_utils/core/utils/size_config.dart';
 import 'package:flutter_utils/core/widgets/responsive_layout.dart';
 
-import '../../widgets/view_builder.dart';
 import '../../widgets/video_view.dart';
+import '../../widgets/view_builder.dart';
+import '../configurations/size_config.dart';
 
 class MediaDialog extends LoadingDialog {
   const MediaDialog(super.context);

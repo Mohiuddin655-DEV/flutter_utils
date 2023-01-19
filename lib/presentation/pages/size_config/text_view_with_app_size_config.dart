@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/size_config.dart';
+import '../../../core/utils/configurations/size_config.dart';
 
 class TextViewWithAppSizeConfig extends StatelessWidget {
   const TextViewWithAppSizeConfig({Key? key}) : super(key: key);

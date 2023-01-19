@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/size_config.dart';
 import 'package:pod_player/pod_player.dart';
+
+import '../utils/configurations/size_config.dart';
 
 class VideoView extends StatefulWidget {
   final bool loopingEnable;

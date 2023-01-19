@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/device_config.dart';
-import 'package:flutter_utils/core/utils/size_config.dart';
 
+import '../utils/configurations/device_config.dart';
+import '../utils/configurations/size_config.dart';
 import '../wrappers/widget_wrapper.dart';
 
 class ResponsiveBody extends StatefulWidget {

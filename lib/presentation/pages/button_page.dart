@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/sources/colors.dart';
 import '../../core/widgets/button.dart';
 
 class ButtonPage extends StatelessWidget {
@@ -16,6 +17,8 @@ class ButtonPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Button(
+              textColor: AppColors.buttonTextColor,
+              background: AppColors.buttonBackgroundColor,
               text: "Submit",
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/device_config.dart';
+import '../utils/configurations/device_config.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final DeviceConfig config;
