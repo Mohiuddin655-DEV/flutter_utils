@@ -47,7 +47,7 @@ class ColorState extends Color {
 
   Color get inactive => Color(inactiveValue ?? activeValue);
 
-  Color current(bool activated) => activated ? active : inactive;
+  Color detect(bool activated) => activated ? active : inactive;
 }
 
 class ColorConfig extends ColorState {

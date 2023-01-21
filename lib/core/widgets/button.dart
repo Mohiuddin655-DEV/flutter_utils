@@ -53,7 +53,7 @@ class _ButtonState extends State<Button> {
       height: widget.height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: background.current(enabled),
+        color: background.detect(enabled),
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 8),
       ),
       child: Material(
@@ -72,7 +72,7 @@ class _ButtonState extends State<Button> {
               overflow: widget.textOverflow ?? TextOverflow.ellipsis,
               textAlign: widget.textAlign ?? TextAlign.center,
               style: TextStyle(
-                color: color.current(enabled),
+                color: color.detect(enabled),
                 fontSize: widget.textSize ?? 16,
                 fontWeight: widget.textStyle,
                 letterSpacing: widget.letterSpacing,

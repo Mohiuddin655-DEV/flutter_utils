@@ -8,10 +8,10 @@ class AppColors {
 
   static ColorConfig buttonTextColor = ColorConfig.of(
     primary: Colors.white,
-    secondary: Colors.grey.shade600,
+    secondary: ColorCodes.greenHolo,
   );
   static ColorConfig buttonBackgroundColor = ColorConfig.of(
-    primary: ColorCodes.red,
-    secondary: ColorCodes.redLight,
+    primary: ColorCodes.green,
+    secondary: ColorCodes.greenLight,
   );
 }
