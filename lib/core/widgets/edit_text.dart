@@ -40,6 +40,7 @@ class _EditTextState extends State<EditText> {
     final nullable = widget.initialValue == 'null';
     widget.controller?.text = !nullable ? widget.initialValue ?? '' : '';
     return Container(
+      color: Colors.red.withOpacity(0.2),
       margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 12),
       child: TextFormField(
         enabled: widget.enabled,
@@ -47,16 +48,30 @@ class _EditTextState extends State<EditText> {
         keyboardType: widget.inputType,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
+          //constraints: const BoxConstraints(maxHeight: 50),
+
+          errorText: "This is error text",
           hintText: widget.hint,
-          border: OutlineInputBorder(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          //border: const UnderlineInputBorder(),
+          // border: OutlineInputBorder(
+          //   borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
+          // ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           labelText: widget.level ?? widget.hint,
-          contentPadding: widget.padding ??
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          //contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         ),
       ),
     );
   }
 }
+
+class InputBorder extends StatelessWidget {
+
+  const InputBorder({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
