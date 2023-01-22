@@ -66,7 +66,6 @@ class _EditTextState extends State<EditText> {
 }
 
 class InputBorder extends StatelessWidget {
-
   const InputBorder({Key? key}) : super(key: key);
 
   @override
@@ -74,4 +73,3 @@ class InputBorder extends StatelessWidget {
     return const Placeholder();
   }
 }
-

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class ContactNumber extends Equatable {
-
   final String name;
   final String number;
 

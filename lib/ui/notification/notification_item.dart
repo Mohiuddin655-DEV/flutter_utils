@@ -20,7 +20,7 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = primaryColor ?? Theme.of(context).primaryColor;
+    final newColor = primaryColor ?? Theme.of(context).primaryColor;
     return Material(
       color: Colors.white,
       child: InkWell(
@@ -41,7 +41,7 @@ class NotificationItem extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: item.isNew ? color : textColor.withOpacity(0.1),
+                    color: item.isNew ? newColor : textColor.withOpacity(0.1),
                   ),
                 ),
                 Expanded(
@@ -61,7 +61,8 @@ class NotificationItem extends StatelessWidget {
                                 style: TextStyle(
                                   color: textColor,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight:
+                                      item.isNew ? FontWeight.bold : null,
                                   height: 1.5,
                                 ),
                               ),
@@ -79,7 +80,9 @@ class NotificationItem extends StatelessWidget {
                                         style: TextStyle(
                                           color: textColor.withOpacity(0.5),
                                           fontSize: 14,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: item.isNew
+                                              ? FontWeight.bold
+                                              : null,
                                         ),
                                       );
                                     } else {
@@ -97,7 +100,8 @@ class NotificationItem extends StatelessWidget {
                                     style: TextStyle(
                                       color: textColor.withOpacity(0.5),
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight:
+                                          item.isNew ? FontWeight.bold : null,
                                     ),
                                   ),
                                 ),

@@ -217,9 +217,9 @@ class _RecyclerViewState extends State<RecyclerView> {
             component: !item.temporary,
             builder: (value) => value
                 ? widget.builder.call(
-              index,
-              item.data,
-            )
+                    index,
+                    item.data,
+                  )
                 : null);
       }).toList(),
     );
@@ -247,9 +247,9 @@ class _RecyclerViewState extends State<RecyclerView> {
               component: !item.temporary,
               builder: (value) => value
                   ? widget.builder.call(
-                index,
-                item.data,
-              )
+                      index,
+                      item.data,
+                    )
                   : null),
         );
       }).toList(),

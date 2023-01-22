@@ -51,7 +51,8 @@ class NotificationData {
       name: "Markus Gavrilov",
       title: "Great news! We are launching our 5th fund: DLE Senior Living.",
       message: "Great news! We are launching our 5th fund: DLE Senior Living.",
-      photo: "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
+      photo:
+          "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
     ),
     NotificationData(
       isNew: true,
@@ -71,7 +72,8 @@ class NotificationData {
       name: "Markus Gavrilov",
       title: "Great news! We are launching our 5th fund: DLE Senior Living.",
       message: "Great news! We are launching our 5th fund: DLE Senior Living.",
-      photo: "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
+      photo:
+          "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
     ),
     NotificationData(
       timeMS: DateTime.now().millisecondsSinceEpoch,
@@ -90,7 +92,8 @@ class NotificationData {
       name: "Markus Gavrilov",
       title: "Great news! We are launching our 5th fund: DLE Senior Living.",
       message: "Great news! We are launching our 5th fund: DLE Senior Living.",
-      photo: "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
+      photo:
+          "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
     ),
     NotificationData(
       timeMS: DateTime.now().millisecondsSinceEpoch,
@@ -109,7 +112,8 @@ class NotificationData {
       name: "Markus Gavrilov",
       title: "Great news! We are launching our 5th fund: DLE Senior Living.",
       message: "Great news! We are launching our 5th fund: DLE Senior Living.",
-      photo: "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
+      photo:
+          "https://i.pinimg.com/736x/c5/c6/3c/c5c63c1cc5bfca51ffc0ceb705dbd553.jpg",
     ),
   ];
 }
