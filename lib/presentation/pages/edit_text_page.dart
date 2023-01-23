@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_utils/core/sources/icons.dart';
 import 'package:flutter_utils/core/utils/regex/regs.dart';
 
 class EditTextPage extends StatefulWidget {
@@ -31,6 +32,7 @@ class _EditTextPageState extends State<EditTextPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Icon(AppIcons.home),
                 SizedBox(height: height * 0.04),
                 const Text(
                   "Here to Get",

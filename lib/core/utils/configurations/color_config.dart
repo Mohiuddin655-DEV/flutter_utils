@@ -1,55 +1,5 @@
 import 'package:flutter/material.dart';
 
-class ColorState extends Color {
-  final int activeValue;
-  final int? inactiveValue;
-
-  const ColorState({
-    required this.activeValue,
-    this.inactiveValue,
-  }) : super(activeValue);
-
-  factory ColorState.of({
-    required dynamic active,
-    dynamic inactive,
-  }) {
-    final a = active is Color
-        ? active.value
-        : active is int
-            ? active
-            : 0;
-    final b = inactive != null
-        ? inactive is Color
-            ? inactive.value
-            : inactive is int
-                ? inactive
-                : 0
-        : a;
-    return ColorState(
-      activeValue: a,
-      inactiveValue: b,
-    );
-  }
-
-  factory ColorState.fromColor({
-    required Color active,
-    Color? inactive,
-  }) {
-    final a = active.value;
-    final b = inactive?.value;
-    return ColorState(
-      activeValue: a,
-      inactiveValue: b,
-    );
-  }
-
-  Color get active => Color(activeValue);
-
-  Color get inactive => Color(inactiveValue ?? activeValue);
-
-  Color detect(bool activated) => activated ? active : inactive;
-}
-
 class ColorConfig extends ColorState {
   final int primary;
   final int? secondary;
@@ -196,4 +146,54 @@ class ColorConfig extends ColorState {
       inactiveValue: unfocused ?? secondary ?? primary,
     );
   }
+}
+
+class ColorState extends Color {
+  final int activeValue;
+  final int? inactiveValue;
+
+  const ColorState({
+    required this.activeValue,
+    this.inactiveValue,
+  }) : super(activeValue);
+
+  factory ColorState.of({
+    required dynamic active,
+    dynamic inactive,
+  }) {
+    final a = active is Color
+        ? active.value
+        : active is int
+            ? active
+            : 0;
+    final b = inactive != null
+        ? inactive is Color
+            ? inactive.value
+            : inactive is int
+                ? inactive
+                : 0
+        : a;
+    return ColorState(
+      activeValue: a,
+      inactiveValue: b,
+    );
+  }
+
+  factory ColorState.fromColor({
+    required Color active,
+    Color? inactive,
+  }) {
+    final a = active.value;
+    final b = inactive?.value;
+    return ColorState(
+      activeValue: a,
+      inactiveValue: b,
+    );
+  }
+
+  Color get active => Color(activeValue);
+
+  Color get inactive => Color(inactiveValue ?? activeValue);
+
+  Color detect(bool activated) => activated ? active : inactive;
 }
