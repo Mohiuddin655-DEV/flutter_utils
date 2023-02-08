@@ -1,44 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/configurations/color_config.dart';
 import 'package:flutter_utils/core/utils/extensions/string_helper.dart';
 
 class Button extends StatefulWidget {
+  final double? width, height;
+  final EdgeInsetsGeometry? margin, padding;
+  final String? text;
+  final double? textSize;
+  final FontWeight? textStyle;
+  final double borderRadius;
+  final bool enabled;
+  final Function()? onClick;
+  final IconData? icon;
+  final double iconSize;
+  final bool expended;
+  final EdgeInsetsGeometry? iconPadding;
+  final IconAlignment iconAlignment;
+  final bool textAllCaps;
+
+  final String? Function(ButtonState state)? textState;
+  final IconData? Function(ButtonState state)? iconState;
+  final Color? Function(ButtonState state)? colorState;
+  final Color? Function(ButtonState state)? backgroundState;
+
   const Button({
-    Key? key,
+    super.key,
+    this.text,
+    this.textSize = 16,
+    this.textStyle,
     this.width,
     this.height,
     this.margin,
     this.padding,
-    this.background,
-    this.borderRadius,
+    this.borderRadius = 0,
     this.enabled = true,
-    required this.text,
-    this.textAlign,
-    this.textAllCaps = false,
-    this.textColor,
-    this.textSize,
-    this.textStyle,
-    this.textOverflow,
-    this.letterSpacing,
-    this.lineSpacing,
     this.onClick,
-  }) : super(key: key);
-
-  final double? width, height;
-  final EdgeInsetsGeometry? margin, padding;
-  final ColorState? background;
-  final double? borderRadius;
-  final bool enabled;
-  final String text;
-  final TextAlign? textAlign;
-  final bool textAllCaps;
-  final ColorState? textColor;
-  final double? textSize;
-  final FontWeight? textStyle;
-  final TextOverflow? textOverflow;
-  final double? letterSpacing;
-  final double? lineSpacing;
-  final Function()? onClick;
+    this.icon,
+    this.expended = false,
+    this.iconSize = 18,
+    this.iconPadding,
+    this.iconAlignment = IconAlignment.end,
+    this.textState,
+    this.iconState,
+    this.colorState,
+    this.backgroundState,
+    this.textAllCaps = false,
+  });
 
   @override
   State<Button> createState() => _ButtonState();
@@ -47,35 +53,76 @@ class Button extends StatefulWidget {
 class _ButtonState extends State<Button> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = widget.enabled && widget.onClick != null
+        ? Colors.white
+        : Colors.grey.shade400;
+    final background = widget.enabled && widget.onClick != null
+        ? theme.primaryColor
+        : Colors.grey.shade200;
+
     return Container(
       margin: widget.margin,
-      width: widget.width,
-      height: widget.height,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: background.detect(enabled),
-        borderRadius: BorderRadius.circular(widget.borderRadius ?? 8),
-      ),
       child: Material(
-        color: Colors.transparent,
+        color: widget.backgroundState?.call(state) ?? background,
+        clipBehavior: Clip.antiAlias,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
         child: InkWell(
-          onTap: enabled ? widget.onClick : null,
-          child: Container(
-            padding: widget.padding ??
-                const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-            child: Text(
-              text,
-              maxLines: 1,
-              overflow: widget.textOverflow ?? TextOverflow.ellipsis,
-              textAlign: widget.textAlign ?? TextAlign.center,
-              style: TextStyle(
-                color: color.detect(enabled),
-                fontSize: widget.textSize ?? 16,
-                fontWeight: widget.textStyle,
-                letterSpacing: widget.letterSpacing,
+          onTap: widget.enabled ? widget.onClick : null,
+          child: AbsorbPointer(
+            child: Container(
+              width: widget.width,
+              height: widget.padding == null ? widget.height : null,
+              padding: widget.padding ??
+                  const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TBIcon(
+                    visible: (widget.iconState ?? widget.icon) != null &&
+                        widget.iconAlignment == IconAlignment.start,
+                    state: state,
+                    icon: widget.icon,
+                    iconState: widget.iconState,
+                    color: color,
+                    colorState: widget.colorState,
+                    size: widget.iconSize,
+                    padding: widget.iconPadding,
+                  ),
+                  if ((widget.iconState ?? widget.icon) != null &&
+                      widget.iconAlignment == IconAlignment.start &&
+                      widget.expended)
+                    const Spacer(),
+                  TBText(
+                    state: state,
+                    primary: color,
+                    text: widget.text,
+                    textSize: widget.textSize,
+                    textStyle: widget.textStyle,
+                    textState: widget.textState,
+                    colorState: widget.colorState,
+                    textAllCaps: widget.textAllCaps,
+                  ),
+                  if ((widget.iconState ?? widget.icon) != null &&
+                      widget.iconAlignment == IconAlignment.end &&
+                      widget.expended)
+                    const Spacer(),
+                  TBIcon(
+                    visible: (widget.iconState ?? widget.icon) != null &&
+                        widget.iconAlignment == IconAlignment.end,
+                    state: state,
+                    icon: widget.icon,
+                    iconState: widget.iconState,
+                    color: color,
+                    colorState: widget.colorState,
+                    size: widget.iconSize,
+                    padding: widget.iconPadding,
+                  ),
+                ],
               ),
             ),
           ),
@@ -84,30 +131,96 @@ class _ButtonState extends State<Button> {
     );
   }
 
-  String get text => widget.textAllCaps ? widget.text.uppercase : widget.text;
-
-  bool get enabled => widget.enabled && widget.onClick != null;
-
-  ColorState get color {
-    if (widget.textColor != null) {
-      return widget.textColor!;
+  ButtonState get state {
+    if (widget.enabled && widget.onClick != null) {
+      return ButtonState.enabled;
     } else {
-      return ColorState.fromColor(
-        active: Colors.white,
-        inactive: Colors.grey.shade600,
-      );
+      return ButtonState.disabled;
     }
   }
+}
 
-  ColorState get background {
-    final bg = widget.background;
-    if (bg != null) {
-      return bg;
-    } else {
-      return ColorState.fromColor(
-        active: Theme.of(context).primaryColor,
-        inactive: const Color(0xFFFAFAFA),
-      );
-    }
+class TBText extends StatelessWidget {
+  final Color? primary;
+  final String? text;
+  final double? textSize;
+  final FontWeight? textStyle;
+  final bool textAllCaps;
+  final String? Function(ButtonState state)? textState;
+  final Color? Function(ButtonState state)? colorState;
+  final ButtonState state;
+
+  const TBText({
+    Key? key,
+    required this.state,
+    this.primary,
+    this.text,
+    this.textSize = 14,
+    this.textStyle,
+    this.textState,
+    this.colorState,
+    this.textAllCaps = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final title = textState?.call(state) ?? text ?? "";
+    return Text(
+      textAllCaps ? title.uppercase : title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: colorState?.call(state) ?? primary,
+        fontSize: textSize,
+        fontWeight: textStyle,
+      ),
+    );
   }
+}
+
+class TBIcon extends StatelessWidget {
+  final ButtonState state;
+  final IconData? icon;
+  final bool visible;
+  final EdgeInsetsGeometry? padding;
+  final Color? color;
+  final double? size;
+  final IconData? Function(ButtonState state)? iconState;
+  final Color? Function(ButtonState state)? colorState;
+
+  const TBIcon({
+    Key? key,
+    required this.state,
+    this.icon,
+    this.visible = true,
+    this.padding,
+    this.color,
+    this.size,
+    this.iconState,
+    this.colorState,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: visible,
+      child: Container(
+        padding: padding,
+        child: Icon(
+          iconState?.call(state) ?? icon,
+          color: colorState?.call(state) ?? color,
+          size: size,
+        ),
+      ),
+    );
+  }
+}
+
+enum IconAlignment {
+  start,
+  end,
+}
+
+enum ButtonState {
+  disabled,
+  enabled,
 }

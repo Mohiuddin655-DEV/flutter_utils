@@ -17,15 +17,17 @@ class ButtonPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Button(
-              textColor: AppColors.buttonTextColor,
-              background: AppColors.buttonBackgroundColor,
               text: "Submit",
+              textAllCaps: true,
+              colorState: (state) => AppColors.buttonTextColor
+                  .detect(state == ButtonState.disabled),
+              backgroundState: (state) => AppColors.buttonBackgroundColor
+                  .detect(state == ButtonState.disabled),
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,
                 vertical: 12,
               ),
-              //onClick: () {},
-              textAllCaps: true,
+              onClick: () {},
             ),
           ],
         ),
