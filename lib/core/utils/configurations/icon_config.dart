@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_remote_icon/flutter_remote_icon.dart';
 
 class IconConfig extends IconState {
   final int primary;
@@ -30,60 +29,44 @@ class IconConfig extends IconState {
     return IconConfig(
       primary: primary is IconData
           ? primary.codePoint
-          : primary is String
-              ? XIconData.fromAssets(primary).codePoint
-              : primary is int
-                  ? primary
-                  : 0,
+          : primary is int
+              ? primary
+              : 0,
       secondary: secondary is IconData
           ? secondary.codePoint
-          : secondary is String
-              ? XIconData.fromAssets(secondary).codePoint
-              : secondary is int
-                  ? secondary
-                  : 0,
+          : secondary is int
+              ? secondary
+              : 0,
       activated: activated is IconData
           ? activated.codePoint
-          : activated is String
-              ? XIconData.fromAssets(activated).codePoint
-              : activated is int
-                  ? activated
-                  : 0,
+          : activated is int
+              ? activated
+              : 0,
       inactivated: inactivated is IconData
           ? inactivated.codePoint
-          : inactivated is String
-              ? XIconData.fromAssets(inactivated).codePoint
-              : inactivated is int
-                  ? inactivated
-                  : 0,
+          : inactivated is int
+              ? inactivated
+              : 0,
       enabled: enabled is IconData
           ? enabled.codePoint
-          : enabled is String
-              ? XIconData.fromAssets(enabled).codePoint
-              : enabled is int
-                  ? enabled
-                  : 0,
+          : enabled is int
+              ? enabled
+              : 0,
       disabled: disabled is IconData
           ? disabled.codePoint
-          : disabled is String
-              ? XIconData.fromAssets(disabled).codePoint
-              : disabled is int
-                  ? disabled
-                  : 0,
+          : disabled is int
+              ? disabled
+              : 0,
       focused: focused is IconData
           ? focused.codePoint
-          : focused is String
-              ? XIconData.fromAssets(focused).codePoint
-              : focused is int
-                  ? focused
-                  : 0,
+          : focused is int
+              ? focused
+              : 0,
       unfocused: unfocused is IconData
           ? unfocused.codePoint
-          : unfocused is String
-              ? XIconData.fromAssets(unfocused).codePoint
-              : unfocused is int
-                  ? unfocused
-                  : 0,
+          : unfocused is int
+              ? unfocused
+              : 0,
     );
   }
 
@@ -139,19 +122,15 @@ class IconState extends IconData {
   }) {
     final a = active is IconData
         ? active.codePoint
-        : active is String
-            ? XIconData.fromAssets(active).codePoint
-            : active is int
-                ? active
-                : 0;
+        : active is int
+            ? active
+            : 0;
     final b = inactive != null
         ? inactive is IconData
             ? inactive.codePoint
-            : active is String
-                ? XIconData.fromAssets(inactive).codePoint
-                : inactive is int
-                    ? inactive
-                    : 0
+            : inactive is int
+                ? inactive
+                : 0
         : a;
     return IconState(
       activeValue: a,
@@ -165,19 +144,6 @@ class IconState extends IconData {
   }) {
     final a = active.codePoint;
     final b = inactive?.codePoint;
-    return IconState(
-      activeValue: a,
-      inactiveValue: b,
-    );
-  }
-
-  factory IconState.fromAsset({
-    required String active,
-    String? inactive,
-  }) {
-    final a = XIconData.fromAssets(active).icon.codePoint;
-    final b =
-        inactive != null ? XIconData.fromAssets(inactive).icon.codePoint : a;
     return IconState(
       activeValue: a,
       inactiveValue: b,

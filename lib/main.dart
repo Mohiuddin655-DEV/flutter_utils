@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/presentation/pages/edit_text_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const Application());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Application extends StatelessWidget {
+  const Application({super.key});
 
   @override
   Widget build(BuildContext context) {
