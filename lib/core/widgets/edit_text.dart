@@ -1,27 +1,11 @@
 import 'package:flutter/material.dart';
 
 class EditText extends StatefulWidget {
-  final String hint;
-  final String? initialValue, level;
-  final EdgeInsetsGeometry? padding, margin;
-  final TextInputType? inputType;
-  final ValueChanged<String>? onChanged;
-  final bool enabled;
-  final BorderRadius? borderRadius;
-  final TextEditingController? controller;
+  final Color? background;
 
   const EditText({
     Key? key,
-    required this.hint,
-    this.initialValue,
-    this.level,
-    this.padding,
-    this.margin,
-    this.inputType,
-    this.onChanged,
-    this.enabled = true,
-    this.borderRadius,
-    this.controller,
+    this.background,
   }) : super(key: key);
 
   @override
@@ -29,47 +13,73 @@ class EditText extends StatefulWidget {
 }
 
 class _EditTextState extends State<EditText> {
+  late EditTextController _controller;
+  late FocusNode _node;
+
+  @override
+  void initState() {
+    _controller = EditTextController();
+    _node = FocusNode();
+    _node.addListener(_handleFocusChange);
+    super.initState();
+  }
+
   @override
   void dispose() {
-    widget.controller?.dispose();
+    _controller.dispose();
+    _node.dispose();
     super.dispose();
+  }
+
+  void _handleFocusChange() {
+    if (_node.hasFocus != _controller._focused) {
+      setState(() {
+        _controller.setFocused(_node.hasFocus);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final nullable = widget.initialValue == 'null';
-    widget.controller?.text = !nullable ? widget.initialValue ?? '' : '';
-    return Container(
-      color: Colors.red.withOpacity(0.2),
-      margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 12),
-      child: TextFormField(
-        enabled: widget.enabled,
-        controller: widget.controller,
-        keyboardType: widget.inputType,
-        onChanged: widget.onChanged,
-        decoration: InputDecoration(
-          //constraints: const BoxConstraints(maxHeight: 50),
-
-          errorText: "This is error text",
-          hintText: widget.hint,
-          //border: const UnderlineInputBorder(),
-          // border: OutlineInputBorder(
-          //   borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-          // ),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          labelText: widget.level ?? widget.hint,
-          //contentPadding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+    final theme = Theme.of(context);
+    final primary = theme.primaryColor;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 6,
+          ),
+          color: widget.background,
+          child: EditableText(
+            controller: _controller,
+            focusNode: _node,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+            ),
+            cursorColor: primary,
+            backgroundCursorColor: Colors.blueAccent,
+          ),
         ),
-      ),
+        if (widget.background == null)
+          Container(
+            decoration: BoxDecoration(
+              color: _controller.isFocused
+                  ? primary
+                  : Colors.grey.withOpacity(0.5),
+            ),
+            height: _controller.isFocused ? 2 : 1,
+          ),
+      ],
     );
   }
 }
 
-class InputBorder extends StatelessWidget {
-  const InputBorder({Key? key}) : super(key: key);
+class EditTextController extends TextEditingController {
+  bool? _focused;
 
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  void setFocused(bool value) => _focused = value;
+
+  bool get isFocused => _focused ?? false;
 }
