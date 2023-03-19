@@ -1,129 +1,101 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/utils/extensions/string_helper.dart';
+import 'package:flutter_utils/core/utils/controllers/view_controller.dart';
 
 class Button extends StatefulWidget {
-  final double? width, height;
-  final EdgeInsetsGeometry? margin, padding;
-  final String? text;
+  final ButtonController? controller;
+  final String text;
+  final TextAlign? textAlign;
+  final Color? textColor;
   final double? textSize;
-  final FontWeight? textStyle;
-  final double borderRadius;
+  final FontWeight? fontWeight;
+  final Color? primary;
+  final double? width, height;
+  final double? borderRadius;
+  final EdgeInsetsGeometry? padding, margin;
   final bool enabled;
-  final Function()? onClick;
-  final IconData? icon;
-  final double iconSize;
-  final bool expended;
-  final EdgeInsetsGeometry? iconPadding;
-  final IconAlignment iconAlignment;
-  final bool textAllCaps;
-
-  final String? Function(ButtonState state)? textState;
-  final IconData? Function(ButtonState state)? iconState;
-  final Color? Function(ButtonState state)? colorState;
-  final Color? Function(ButtonState state)? backgroundState;
+  final Function()? onPressed;
+  final Future<bool> Function()? onExecute;
 
   const Button({
-    super.key,
-    this.text,
-    this.textSize = 16,
-    this.textStyle,
-    this.width,
+    Key? key,
+    required this.text,
+    this.textAlign,
+    this.textColor,
+    this.textSize,
+    this.fontWeight,
+    this.controller,
+    this.primary,
+    this.width = double.infinity,
     this.height,
-    this.margin,
     this.padding,
-    this.borderRadius = 0,
+    this.margin,
+    this.borderRadius,
     this.enabled = true,
-    this.onClick,
-    this.icon,
-    this.expended = false,
-    this.iconSize = 18,
-    this.iconPadding,
-    this.iconAlignment = IconAlignment.end,
-    this.textState,
-    this.iconState,
-    this.colorState,
-    this.backgroundState,
-    this.textAllCaps = false,
-  });
+    this.onPressed,
+    this.onExecute,
+  }) : super(key: key);
 
   @override
   State<Button> createState() => _ButtonState();
 }
 
 class _ButtonState extends State<Button> {
+  late ButtonController controller;
+
+  late Color primary = widget.primary ?? Theme.of(context).primaryColor;
+
+  @override
+  void initState() {
+    controller = widget.controller ?? ButtonController();
+    controller.enabled = widget.enabled;
+    controller.text = widget.text;
+    controller.textAlign = widget.textAlign;
+    controller.textColor = widget.textColor;
+    controller.textSize = widget.textSize;
+    controller.fontWeight = widget.fontWeight;
+    controller.setListener(setState);
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant Button oldWidget) {
+    controller.enabled = widget.enabled;
+    controller.text = widget.text;
+    controller.textAlign = widget.textAlign;
+    controller.textColor = widget.textColor;
+    controller.textSize = widget.textSize;
+    controller.fontWeight = widget.fontWeight;
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = widget.enabled && widget.onClick != null
-        ? Colors.white
-        : Colors.grey.shade400;
-    final background = widget.enabled && widget.onClick != null
-        ? theme.primaryColor
-        : Colors.grey.shade200;
+    final color =
+        controller.enabled ? Colors.white : Colors.black.withOpacity(0.4);
+    final background = controller.enabled ? primary : primary.withOpacity(0.1);
 
-    return Container(
-      margin: widget.margin,
-      child: Material(
-        color: widget.backgroundState?.call(state) ?? background,
+    return GestureDetector(
+      onTap: controller.enabled ? _onClick : null,
+      child: Container(
+        margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 8),
         clipBehavior: Clip.antiAlias,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        child: InkWell(
-          onTap: widget.enabled ? widget.onClick : null,
-          child: AbsorbPointer(
-            child: Container(
-              width: widget.width,
-              height: widget.padding == null ? widget.height : null,
-              padding: widget.padding ??
-                  const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TBIcon(
-                    visible: (widget.iconState ?? widget.icon) != null &&
-                        widget.iconAlignment == IconAlignment.start,
-                    state: state,
-                    icon: widget.icon,
-                    iconState: widget.iconState,
-                    color: color,
-                    colorState: widget.colorState,
-                    size: widget.iconSize,
-                    padding: widget.iconPadding,
-                  ),
-                  if ((widget.iconState ?? widget.icon) != null &&
-                      widget.iconAlignment == IconAlignment.start &&
-                      widget.expended)
-                    const Spacer(),
-                  TBText(
-                    state: state,
-                    primary: color,
-                    text: widget.text,
-                    textSize: widget.textSize,
-                    textStyle: widget.textStyle,
-                    textState: widget.textState,
-                    colorState: widget.colorState,
-                    textAllCaps: widget.textAllCaps,
-                  ),
-                  if ((widget.iconState ?? widget.icon) != null &&
-                      widget.iconAlignment == IconAlignment.end &&
-                      widget.expended)
-                    const Spacer(),
-                  TBIcon(
-                    visible: (widget.iconState ?? widget.icon) != null &&
-                        widget.iconAlignment == IconAlignment.end,
-                    state: state,
-                    icon: widget.icon,
-                    iconState: widget.iconState,
-                    color: color,
-                    colorState: widget.colorState,
-                    size: widget.iconSize,
-                    padding: widget.iconPadding,
-                  ),
-                ],
-              ),
+        width: widget.width ?? double.infinity,
+        height: widget.height,
+        padding: widget.padding,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          child: Text(
+            controller.text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
             ),
           ),
         ),
@@ -131,96 +103,56 @@ class _ButtonState extends State<Button> {
     );
   }
 
-  ButtonState get state {
-    if (widget.enabled && widget.onClick != null) {
-      return ButtonState.enabled;
+  void _onClick() async {
+    controller.setEnabled(false);
+    if (widget.onExecute != null) {
+      await widget.onExecute?.call();
     } else {
-      return ButtonState.disabled;
+      controller.onClick?.call();
     }
   }
-}
 
-class TBText extends StatelessWidget {
-  final Color? primary;
-  final String? text;
-  final double? textSize;
-  final FontWeight? textStyle;
-  final bool textAllCaps;
-  final String? Function(ButtonState state)? textState;
-  final Color? Function(ButtonState state)? colorState;
-  final ButtonState state;
-
-  const TBText({
-    Key? key,
-    required this.state,
-    this.primary,
-    this.text,
-    this.textSize = 14,
-    this.textStyle,
-    this.textState,
-    this.colorState,
-    this.textAllCaps = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final title = textState?.call(state) ?? text ?? "";
-    return Text(
-      textAllCaps ? title.uppercase : title,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: colorState?.call(state) ?? primary,
-        fontSize: textSize,
-        fontWeight: textStyle,
-      ),
-    );
+  get loaded {
+    const duration = Duration(milliseconds: 250);
+    Timer(duration, () {
+      controller.setEnabled(true);
+    });
   }
 }
 
-class TBIcon extends StatelessWidget {
-  final ButtonState state;
-  final IconData? icon;
-  final bool visible;
-  final EdgeInsetsGeometry? padding;
-  final Color? color;
-  final double? size;
-  final IconData? Function(ButtonState state)? iconState;
-  final Color? Function(ButtonState state)? colorState;
+class ButtonController extends ViewController {
+  String? _text;
+  double? textSize;
+  TextAlign? textAlign;
+  Color? textColor;
+  FontWeight? fontWeight;
 
-  const TBIcon({
-    Key? key,
-    required this.state,
-    this.icon,
-    this.visible = true,
-    this.padding,
-    this.color,
-    this.size,
-    this.iconState,
-    this.colorState,
-  }) : super(key: key);
+  set text(String value) => _text = value;
 
-  @override
-  Widget build(BuildContext context) {
-    return Visibility(
-      visible: visible,
-      child: Container(
-        padding: padding,
-        child: Icon(
-          iconState?.call(state) ?? icon,
-          color: colorState?.call(state) ?? color,
-          size: size,
-        ),
-      ),
-    );
+  String get text => _text ?? "";
+
+  void setText(String? value) {
+    text = value ?? "";
+    notify;
   }
-}
 
-enum IconAlignment {
-  start,
-  end,
-}
+  void setTextAlign(TextAlign value) {
+    textAlign = value;
+    notify;
+  }
 
-enum ButtonState {
-  disabled,
-  enabled,
+  void setTextColor(Color value) {
+    textColor = value;
+    notify;
+  }
+
+  void setTextSize(double value) {
+    textSize = value;
+    notify;
+  }
+
+  void setTextWeight(FontWeight value) {
+    fontWeight = value;
+    notify;
+  }
 }

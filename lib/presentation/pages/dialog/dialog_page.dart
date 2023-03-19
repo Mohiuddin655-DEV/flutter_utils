@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_utils/core/utils/dialogs/media_dialog.dart';
-import 'package:flutter_utils/core/widgets/button.dart';
+import 'package:flutter_utils/core/widgets/ex_button.dart';
 
 class DialogPage extends StatelessWidget {
   const DialogPage({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class DialogPage extends StatelessWidget {
       body: Center(
         child: Container(
           color: Colors.white,
-          child: Button(
+          child: ExButton(
             width: 200,
             text: "Click",
             onClick: () {

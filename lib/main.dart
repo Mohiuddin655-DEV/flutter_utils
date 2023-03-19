@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/presentation/pages/edit_text_page.dart';
+import 'package:flutter_utils/ui/phone_auth/activity.dart';
 
 void main() => runApp(const Application());
 
@@ -14,7 +14,7 @@ class Application extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const EditTextPage(),
+      home: AuthPhoneActivity(),
     );
   }
 }

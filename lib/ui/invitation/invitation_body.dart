@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/utils/controllers/search_view_controller.dart';
-import '../../core/widgets/button.dart';
+import '../../core/widgets/ex_button.dart';
 import '../../core/widgets/search_view.dart';
 import '../../core/widgets/view_builder.dart';
 import 'data/contact.dart';
@@ -145,7 +145,7 @@ class _InvitationBodyState extends State<InvitationBody> {
               },
             ),
           ),
-          Button(
+          ExButton(
             margin: const EdgeInsets.only(
               left: 32,
               right: 32,

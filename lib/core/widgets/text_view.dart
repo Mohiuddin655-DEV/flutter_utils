@@ -38,13 +38,13 @@ class _TextViewState extends State<TextView> {
   @override
   void initState() {
     controller = widget.controller ?? TextViewController();
-    controller.setCallback(setState);
     controller.text = widget.text;
     controller.textAlign = widget.textAlign;
     controller.textColor = widget.textColor;
     controller.textOverflow = widget.textOverflow;
     controller.textSize = widget.textSize;
     controller.maxLines = widget.maxLines;
+    controller._setCallback(setState);
     super.initState();
   }
 
@@ -71,7 +71,7 @@ class _TextViewState extends State<TextView> {
 }
 
 class TextViewController {
-  late Function(VoidCallback fn) callback;
+  late Function(VoidCallback fn) _callback;
   String? _text;
   double? textSize;
   TextAlign? textAlign;
@@ -80,52 +80,52 @@ class TextViewController {
   FontWeight? fontWeight;
   int? maxLines;
 
-  void setCallback(void Function(VoidCallback fn) callback) {
-    this.callback = callback;
+  void _setCallback(void Function(VoidCallback fn) callback) {
+    _callback = callback;
   }
 
-  set text(String value) => _text = value;
+  set text(String? value) => _text = value;
 
   String get text => _text ?? "";
 
   void setText(String? value) {
-    callback(() {
+    _callback(() {
       text = value ?? "";
     });
   }
 
   void setTextAlign(TextAlign value) {
-    callback(() {
+    _callback(() {
       textAlign = value;
     });
   }
 
   void setTextColor(Color value) {
-    callback(() {
+    _callback(() {
       textColor = value;
     });
   }
 
   void setTextOverflow(TextOverflow value) {
-    callback(() {
+    _callback(() {
       textOverflow = value;
     });
   }
 
   void setTextSize(double value) {
-    callback(() {
+    _callback(() {
       textSize = value;
     });
   }
 
   void setTextWeight(FontWeight value) {
-    callback(() {
+    _callback(() {
       fontWeight = value;
     });
   }
 
   void setMaxLine(int value) {
-    callback(() {
+    _callback(() {
       maxLines = value;
     });
   }

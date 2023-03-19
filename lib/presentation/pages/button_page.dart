@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/sources/colors.dart';
-import '../../core/widgets/button.dart';
+import '../../core/widgets/ex_button.dart';
 
 class ButtonPage extends StatelessWidget {
   const ButtonPage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class ButtonPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Button(
+            ExButton(
               text: "Submit",
               textAllCaps: true,
               colorState: (state) => AppColors.buttonTextColor
