@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_utils/core/widgets/bottom_navigation_view/bottom_navigation_button.dart';
 
-import 'sample/bottom_navigation_body.dart';
-import 'sample/bottom_navigation_buttons.dart';
-
+import 'bottom_navigation_body.dart';
+import 'bottom_navigation_button.dart';
+import 'bottom_navigation_buttons.dart';
 class BottomNavigationView extends StatefulWidget {
   final Widget? body;
   final List<BottomNavigationButton> buttons;

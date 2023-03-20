@@ -8,7 +8,15 @@ typedef OnNotifyListener = void Function(VoidCallback fn);
 typedef OnValidListener = bool Function();
 typedef OnViewListener = Function();
 
-abstract class ViewController {
+class ViewController {
+  static ViewController? _proxy;
+
+  ViewController();
+
+  factory ViewController.of() {
+    return _proxy ??= ViewController();
+  }
+
   bool enabled = true;
   bool activated = false;
   bool visibility = true;
