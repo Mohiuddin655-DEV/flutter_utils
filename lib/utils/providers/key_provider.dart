@@ -1,4 +1,4 @@
-import 'package:flutter_utils/utils/utils.dart';
+import '../utils.dart';
 
 import '../converters/replacement.dart';
 import '../formats/key_format.dart';

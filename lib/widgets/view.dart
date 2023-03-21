@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-typedef OnChangeListener = Function();
+typedef OnChangeListener = Function<T>(T value);
 typedef OnErrorListener = String Function(ViewError type);
 typedef OnNotifyListener = void Function(VoidCallback fn);
 typedef OnValidListener = bool Function();
-typedef OnViewListener = Function();
+typedef OnViewClickListener = Function();
 
 class ViewController {
   static ViewController? _proxy;
@@ -22,29 +22,29 @@ class ViewController {
   OnChangeListener? _onChange;
   OnErrorListener? _onError;
   OnValidListener? _onValid;
-  OnViewListener? _onClick, _onDoubleClick, _onLongClick;
+  OnViewClickListener? _onClick, _onDoubleClick, _onLongClick;
 
   set onChange(OnChangeListener? listener) => _onChange = listener;
 
-  set onClick(OnViewListener? listener) => _onClick = listener;
+  set onClick(OnViewClickListener? listener) => _onClick = listener;
 
   set onError(OnErrorListener? listener) => _onError = listener;
 
-  set onDoubleClick(OnViewListener? listener) => _onDoubleClick = listener;
+  set onDoubleClick(OnViewClickListener? listener) => _onDoubleClick = listener;
 
-  set onLongClick(OnViewListener? listener) => _onLongClick = listener;
+  set onLongClick(OnViewClickListener? listener) => _onLongClick = listener;
 
   set onValidListener(OnValidListener? listener) => _onValid = listener;
 
   OnChangeListener? get onChange => enabled ? _onChange : null;
 
-  OnViewListener? get onClick => enabled ? _onClick : null;
+  OnViewClickListener? get onClick => enabled ? _onClick : null;
 
   OnErrorListener? get onError => enabled ? _onError : null;
 
-  OnViewListener? get onDoubleClick => enabled ? _onDoubleClick : null;
+  OnViewClickListener? get onDoubleClick => enabled ? _onDoubleClick : null;
 
-  OnViewListener? get onLongClick => enabled ? _onLongClick : null;
+  OnViewClickListener? get onLongClick => enabled ? _onLongClick : null;
 
   OnValidListener? get onValid => enabled ? _onValid : null;
 
@@ -71,7 +71,7 @@ class ViewController {
     _onChange = listener;
   }
 
-  void setOnClickListener(OnViewListener listener) {
+  void setOnClickListener(OnViewClickListener listener) {
     _onClick = listener;
   }
 
@@ -79,11 +79,11 @@ class ViewController {
     _onError = listener;
   }
 
-  void setOnDoubleClickListener(OnViewListener listener) {
+  void setOnDoubleClickListener(OnViewClickListener listener) {
     _onDoubleClick = listener;
   }
 
-  void setOnLongClickListener(OnViewListener listener) {
+  void setOnLongClickListener(OnViewClickListener listener) {
     _onLongClick = listener;
   }
 

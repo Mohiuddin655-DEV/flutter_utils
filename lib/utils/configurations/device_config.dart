@@ -3,19 +3,28 @@ import 'dart:ui';
 class Device extends Size {
   final String name;
   final double variant;
+  final double maxX, maxY;
 
   const Device({
     required double x,
     required double y,
+    double? maxX,
+    double? maxY,
     this.name = 'Unknown',
     this.variant = 0,
-  }) : super(x, y);
+  })  : maxX = maxX ?? x,
+        maxY = maxY ?? y,
+        super(x, y);
 
   @override
   double get width => super.width > 100 ? super.width : super.width * 100;
 
   @override
   double get height => super.height > 100 ? super.height : super.height * 100;
+
+  double get maxWidth => maxX > 100 ? maxX : maxX * 100;
+
+  double get maxHeight => maxY > 100 ? maxY : maxY * 100;
 
   double rationalWidth(double cx) => cx * aspectRatio;
 
@@ -29,12 +38,10 @@ class Device extends Size {
 }
 
 class DeviceInfo {
-  static const double mobileX = 9,
-      mobileY = 16,
-      mobileVariant = 3.9272727272727;
-  static const double tabX = 1, tabY = 1, tabVariant = 8.0;
-  static const double laptopX = 16, laptopY = 10, laptopVariant = 3.7;
-  static const double desktopX = 16, desktopY = 8, desktopVariant = 3.7;
+  static const double mobileX = 0.65, mobileY = 1, mobileVariant = 4;
+  static const double tabX = 1.2, tabY = 1, tabVariant = 8.0;
+  static const double laptopX = 1.4, laptopY = 1, laptopVariant = 3.7;
+  static const double desktopX = 1.8, desktopY = 0.9, desktopVariant = 3.7;
   static const double tvX = 0, tvY = 0, tvVariant = 3.7;
 }
 
@@ -83,10 +90,12 @@ class DeviceConfig {
   bool isDesktop(double cx, double cy) => isDevice(desktop, cx, cy);
 
   bool isDevice(Device device, double cx, double cy) {
-    final x = device.aspectRatio;
-    final y = device.ratio(cx, cy);
-    print('\n${device.name}\t => X : ${x.toStringAsFixed(2)}');
-    print('${device.name}\t => Y : ${y.toStringAsFixed(2)}');
-    return x > y;
+    final current = device.ratio(cx, cy);
+    final min = device.aspectRatio;
+    final max = device.ratio(device.maxX, device.maxY);
+    print('\n${device.name}\t => Min : ${min.toStringAsFixed(2)}');
+    print('${device.name}\t => Max : ${max.toStringAsFixed(2)}');
+    print('${device.name}\t => Cur : ${current.toStringAsFixed(2)}');
+    return min > current && current <= max;
   }
 }

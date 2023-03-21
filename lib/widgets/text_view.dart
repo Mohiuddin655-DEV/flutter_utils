@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'view.dart';
+
 class TextView extends StatefulWidget {
   final TextViewController? controller;
   final double? width, height;
@@ -8,9 +10,10 @@ class TextView extends StatefulWidget {
   final Color? textColor;
   final TextOverflow? textOverflow;
   final double textSize;
-  final FontWeight? textStyle;
+  final FontWeight? fontWeight;
   final EdgeInsetsGeometry? margin, padding;
   final int? maxLines;
+  final OnViewClickListener? onClick;
 
   const TextView({
     Key? key,
@@ -22,10 +25,11 @@ class TextView extends StatefulWidget {
     this.textColor,
     this.textOverflow,
     this.textSize = 14,
-    this.textStyle,
+    this.fontWeight,
     this.margin,
     this.padding,
     this.maxLines,
+    this.onClick,
   }) : super(key: key);
 
   @override
@@ -38,95 +42,98 @@ class _TextViewState extends State<TextView> {
   @override
   void initState() {
     controller = widget.controller ?? TextViewController();
+    initController();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant TextView oldWidget) {
+    initController();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void initController() {
+    controller.setNotifier(setState);
+    controller.fontWeight = widget.fontWeight;
+    controller.maxLines = widget.maxLines;
     controller.text = widget.text;
     controller.textAlign = widget.textAlign;
     controller.textColor = widget.textColor;
     controller.textOverflow = widget.textOverflow;
     controller.textSize = widget.textSize;
-    controller.maxLines = widget.maxLines;
-    controller._setCallback(setState);
-    super.initState();
+    controller.onClick = widget.onClick;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      padding: widget.padding,
-      margin: widget.margin,
-      child: Text(
-        controller.text,
-        maxLines: controller.maxLines,
-        textAlign: controller.textAlign,
-        overflow: controller.textOverflow,
-        style: TextStyle(
-          fontSize: controller.textSize,
-          fontWeight: controller.fontWeight,
-          color: controller.textColor,
+    return GestureDetector(
+      onTap: controller.onClick,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        padding: widget.padding,
+        margin: widget.margin,
+        child: Text(
+          controller.text,
+          maxLines: controller.maxLines,
+          textAlign: controller.textAlign,
+          overflow: controller.textOverflow,
+          style: TextStyle(
+            fontSize: controller.textSize,
+            fontWeight: controller.fontWeight,
+            color: controller.textColor,
+          ),
         ),
       ),
     );
   }
 }
 
-class TextViewController {
-  late Function(VoidCallback fn) _callback;
+class TextViewController extends ViewController {
+  FontWeight? fontWeight;
+  int? maxLines;
   String? _text;
   double? textSize;
   TextAlign? textAlign;
   Color? textColor;
   TextOverflow? textOverflow;
-  FontWeight? fontWeight;
-  int? maxLines;
-
-  void _setCallback(void Function(VoidCallback fn) callback) {
-    _callback = callback;
-  }
 
   set text(String? value) => _text = value;
 
   String get text => _text ?? "";
 
   void setText(String? value) {
-    _callback(() {
-      text = value ?? "";
-    });
+    text = value ?? "";
+    notify;
   }
 
   void setTextAlign(TextAlign value) {
-    _callback(() {
-      textAlign = value;
-    });
+    textAlign = value;
+    notify;
   }
 
   void setTextColor(Color value) {
-    _callback(() {
-      textColor = value;
-    });
+    textColor = value;
+    notify;
   }
 
   void setTextOverflow(TextOverflow value) {
-    _callback(() {
-      textOverflow = value;
-    });
+    textOverflow = value;
+    notify;
   }
 
   void setTextSize(double value) {
-    _callback(() {
-      textSize = value;
-    });
+    textSize = value;
+    notify;
   }
 
   void setTextWeight(FontWeight value) {
-    _callback(() {
-      fontWeight = value;
-    });
+    fontWeight = value;
+    notify;
   }
 
   void setMaxLine(int value) {
-    _callback(() {
-      maxLines = value;
-    });
+    maxLines = value;
+    notify;
   }
 }
