@@ -1,68 +1,46 @@
 name: flutter_utils
-description: A new Flutter project.
+description: Flutter Utils.
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   validators: ^3.0.0
-  connectivity_plus: ^3.0.2
   shared_preferences: ^2.0.15
   timer_count_down: ^2.2.1
-  intl: ^0.18.0
   firebase_core: ^2.4.0
   cloud_firestore: ^4.3.0
   permission_handler: ^10.2.0
-  firebase_storage: ^11.0.9
   http: ^0.13.5
   fluttertoast: ^8.1.2
   flutter_smart_dialog: ^4.8.0
   firebase_database: ^10.0.9
   video_player: ^2.4.10
-  pod_player: ^0.1.0
   link_preview_generator: ^1.2.0
   share: ^2.0.4
   image_picker: ^0.8.6
   google_fonts: ^3.0.1
   photo_view: ^0.14.0
-  cached_network_image: ^3.2.3
-  lottie: ^1.4.3
   equatable: ^2.0.5
   substring_highlight: ^1.0.33
-  badges: ^2.0.3
-  camera: ^0.10.3+2
 #  flutter_remote_icon: ^0.0.3+6
+  flutter_svg: ^2.0.0+1
+  intl_phone_field: ^3.1.0
+  pod_player: ^0.1.0
+  connectivity_plus: ^3.0.3
+  firebase_storage: ^11.0.16
+  intl: ^0.17.0
+  badges: ^3.0.2
+  camera: ^0.10.3+2
+  cached_network_image: ^3.2.3
+  lottie: ^1.4.3
 
 dev_dependencies:
   flutter_test:
