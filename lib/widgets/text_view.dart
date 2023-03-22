@@ -4,6 +4,8 @@ import 'view.dart';
 
 class TextView extends StatefulWidget {
   final TextViewController? controller;
+  final Color? background;
+  final double borderRadius;
   final double? width, height;
   final String text;
   final TextAlign? textAlign;
@@ -18,6 +20,8 @@ class TextView extends StatefulWidget {
   const TextView({
     Key? key,
     this.controller,
+    this.background,
+    this.borderRadius = 0,
     this.text = "",
     this.width,
     this.height,
@@ -69,6 +73,10 @@ class _TextViewState extends State<TextView> {
     return GestureDetector(
       onTap: controller.onClick,
       child: Container(
+        decoration: BoxDecoration(
+          color: widget.background,
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+        ),
         width: widget.width,
         height: widget.height,
         padding: widget.padding,

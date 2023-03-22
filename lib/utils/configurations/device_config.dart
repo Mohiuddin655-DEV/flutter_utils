@@ -93,9 +93,6 @@ class DeviceConfig {
     final current = device.ratio(cx, cy);
     final min = device.aspectRatio;
     final max = device.ratio(device.maxX, device.maxY);
-    print('\n${device.name}\t => Min : ${min.toStringAsFixed(2)}');
-    print('${device.name}\t => Max : ${max.toStringAsFixed(2)}');
-    print('${device.name}\t => Cur : ${current.toStringAsFixed(2)}');
     return min > current && current <= max;
   }
 }

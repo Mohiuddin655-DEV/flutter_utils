@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ActionButton extends StatelessWidget {
   final double size;
   final double? borderRadius;
-  final IconData icon;
+  final dynamic icon;
   final Color? tint;
   final Color? background;
+  final double? padding;
+  final EdgeInsetsGeometry? margin;
   final Function()? onPressed;
 
   const ActionButton({
@@ -14,7 +17,9 @@ class ActionButton extends StatelessWidget {
     this.borderRadius,
     this.tint,
     this.background,
-    this.size = 40,
+    this.size = 24,
+    this.padding,
+    this.margin,
     this.onPressed,
   }) : super(key: key);
 
@@ -23,19 +28,35 @@ class ActionButton extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Material(
-          borderRadius: BorderRadius.circular(borderRadius ?? 50),
-          color: background,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
+        Container(
+          padding: margin,
+          child: Material(
             borderRadius: BorderRadius.circular(borderRadius ?? 50),
-            child: SizedBox(
-              width: size,
-              height: size,
-              child: Icon(
-                icon,
-                color: tint,
+            color: background,
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onPressed,
+              borderRadius: BorderRadius.circular(borderRadius ?? 50),
+              child: Container(
+                width: size,
+                height: size,
+                margin: EdgeInsets.all(padding ?? (size / 3)),
+                child: FittedBox(
+                  child: icon is String
+                      ? SvgPicture.asset(
+                          icon,
+                          width: size,
+                          height: size,
+                          color: tint,
+                        )
+                      : icon is IconData
+                          ? Icon(
+                              icon,
+                              size: size,
+                              color: tint,
+                            )
+                          : null,
+                ),
               ),
             ),
           ),
