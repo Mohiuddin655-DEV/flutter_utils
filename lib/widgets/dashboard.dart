@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -97,28 +94,30 @@ class DesktopLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Flex(
-        direction: Axis.horizontal,
-        children: [
-          menu,
-          Expanded(
-            child: Flex(
-              direction: Axis.vertical,
-              children: [
-                header,
-                Expanded(
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    children: [
-                      body,
-                      if (report != null) report!,
-                    ],
+      body: SafeArea(
+        child: Flex(
+          direction: Axis.horizontal,
+          children: [
+            menu,
+            Expanded(
+              child: Flex(
+                direction: Axis.vertical,
+                children: [
+                  header,
+                  Expanded(
+                    child: Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        body,
+                        if (report != null) report!,
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -139,20 +138,22 @@ class TabLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Flex(
-        direction: Axis.horizontal,
-        children: [
-          menu,
-          Expanded(
-            child: Flex(
-              direction: Axis.vertical,
-              children: [
-                header,
-                body,
-              ],
+      body: SafeArea(
+        child: Flex(
+          direction: Axis.horizontal,
+          children: [
+            menu,
+            Expanded(
+              child: Flex(
+                direction: Axis.vertical,
+                children: [
+                  header,
+                  body,
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -189,12 +190,10 @@ class _MobileLayoutState extends State<MobileLayout> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.leadingIcon.toString());
     return Scaffold(
       drawer: Container(
         color: widget.background,
-        padding: !kIsWeb ? const EdgeInsets.only(top: 24) : null,
-        child: widget.menu,
+        child: SafeArea(child: widget.menu),
       ),
       appBar: AppBar(
         backgroundColor: widget.background,
@@ -208,24 +207,26 @@ class _MobileLayoutState extends State<MobileLayout> {
       ),
       body: Container(
         color: widget.background,
-        child: Flex(
-          direction: Axis.vertical,
-          children: [
-            Flex(
-              direction: Axis.horizontal,
-              children: [
-                ImageButton(
-                  background: widget.leadingBackground,
-                  tint: widget.leadingTint,
-                  icon: widget.leadingIcon ?? Icons.menu,
-                  margin: const EdgeInsets.all(8),
-                  onClick: (con) => Scaffold.of(con).openDrawer(),
-                ),
-                Expanded(child: widget.header),
-              ],
-            ),
-            widget.body,
-          ],
+        child: SafeArea(
+          child: Flex(
+            direction: Axis.vertical,
+            children: [
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  ImageButton(
+                    background: widget.leadingBackground,
+                    tint: widget.leadingTint,
+                    icon: widget.leadingIcon ?? Icons.menu,
+                    margin: const EdgeInsets.all(8),
+                    onClick: (con) => Scaffold.of(con).openDrawer(),
+                  ),
+                  Expanded(child: widget.header),
+                ],
+              ),
+              widget.body,
+            ],
+          ),
         ),
       ),
     );
