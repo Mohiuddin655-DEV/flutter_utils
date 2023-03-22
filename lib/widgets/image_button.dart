@@ -9,7 +9,8 @@ class ImageButton extends StatelessWidget {
   final double size, radius;
   final double? padding;
   final Color? tint, background;
-  final Function()? onClick;
+  final EdgeInsetsGeometry margin;
+  final Function(BuildContext context)? onClick;
 
   final StateValue<IconData>? iconState;
   final StateValue<Widget>? imageState;
@@ -24,6 +25,7 @@ class ImageButton extends StatelessWidget {
     this.size = 24,
     this.radius = 50,
     this.padding,
+    this.margin = EdgeInsets.zero,
     this.tint,
     this.background,
     this.onClick,
@@ -55,21 +57,24 @@ class ImageButton extends StatelessWidget {
           active: image,
           inactive: null,
         );
-    return Material(
-      color: bg.detect(enabled),
-      borderRadius: BorderRadius.circular(radius),
-      child: InkWell(
+    return Padding(
+      padding: margin,
+      child: Material(
+        color: bg.detect(enabled),
         borderRadius: BorderRadius.circular(radius),
-        onTap: enabled ? onClick : null,
-        child: Padding(
-          padding: EdgeInsets.all(padding ?? (size / 3)),
-          child: img.detect(enabled) ??
-              image ??
-              Icon(
-                icn.detect(enabled),
-                color: tn.detect(enabled),
-                size: size,
-              ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(radius),
+          onTap: enabled ? () => onClick?.call(context) : null,
+          child: Padding(
+            padding: EdgeInsets.all(padding ?? (size / 3)),
+            child: img.detect(enabled) ??
+                image ??
+                Icon(
+                  icn.detect(enabled),
+                  color: tn.detect(enabled),
+                  size: size,
+                ),
+          ),
         ),
       ),
     );

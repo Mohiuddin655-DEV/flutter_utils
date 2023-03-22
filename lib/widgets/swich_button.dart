@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'view.dart';
+
 class SwitchButton extends StatefulWidget {
   final SwitchController? controller;
   final bool value;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../utils/configurations/device_config.dart';
 import '../utils/configurations/size_config.dart';
-import 'widget_wrapper.dart';
 
 class ResponsiveBody extends StatefulWidget {
   final int? flex;
@@ -48,7 +48,7 @@ class _ResponsiveBodyState extends State<ResponsiveBody> {
   }
 
   Widget _parent(BuildContext context, SizeConfig config) => widget.detectChild
-      ? WidgetWrapper(
+      ? _WidgetWrapper(
           wrapper: (size) => setState(() => _size = size),
           child: _child(context, config),
         )
@@ -58,4 +58,41 @@ class _ResponsiveBodyState extends State<ResponsiveBody> {
         color: widget.background,
         child: widget.builder.call(context, config),
       );
+}
+
+class _WidgetWrapper extends SingleChildRenderObjectWidget {
+  final Function(Size size) wrapper;
+
+  const _WidgetWrapper({
+    Key? key,
+    required this.wrapper,
+    super.child,
+  }) : super(key: key);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _ObjectWrapper(wrapper);
+  }
+}
+
+class _ObjectWrapper extends RenderProxyBox {
+  final Function(Size size) wrapper;
+
+  Size? ox;
+
+  _ObjectWrapper(this.wrapper);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+    try {
+      Size? nx = child?.size;
+      if (nx != null && ox != nx) {
+        ox = nx;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          wrapper(nx);
+        });
+      }
+    } catch (_) {}
+  }
 }
