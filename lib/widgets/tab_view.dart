@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../utils/models/state_value.dart';
+class TabValue<T> {
+  final T active, inactive;
+
+  const TabValue({
+    required this.active,
+    T? inactive,
+  }) : inactive = inactive ?? active;
+
+  T detect(bool activated) => activated ? active : inactive;
+}
 
 class TabView extends StatefulWidget {
   final List<String> titles;
-  final StateValue<double>? titleSize;
-  final StateValue<Color>? titleColor;
-  final StateValue<FontWeight>? fontWeight;
+  final TabValue<double>? titleSize;
+  final TabValue<Color>? titleColor;
+  final TabValue<FontWeight>? fontWeight;
 
   final TabController? controller;
 
@@ -44,10 +53,10 @@ class _TabViewState extends State<TabView> with SingleTickerProviderStateMixin {
     final primary = theme.primaryColor;
     final activated = controller.previousIndex == currentIndex;
     final color = widget.titleColor ??
-        StateValue(active: primary, inactive: primary.withOpacity(0.5));
-    final size = widget.titleSize ?? const StateValue(active: 18, inactive: 16);
+        TabValue(active: primary, inactive: primary.withOpacity(0.5));
+    final size = widget.titleSize ?? const TabValue(active: 18, inactive: 16);
     final style = widget.fontWeight ??
-        const StateValue(active: FontWeight.bold, inactive: FontWeight.normal);
+        const TabValue(active: FontWeight.bold, inactive: FontWeight.normal);
     return TabBar(
       onTap: (index) {
         currentIndex = index;

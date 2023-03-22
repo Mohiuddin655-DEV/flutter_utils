@@ -87,6 +87,7 @@ class _EditTextState extends State<EditText> {
 
   void initController() {
     controller._editable.text = widget.text ?? "";
+    controller.enabled = widget.enabled;
     controller.autoFocus = widget.autoFocus;
     controller.width = widget.width;
     controller.border = widget.border;
@@ -192,19 +193,20 @@ class _EditTextState extends State<EditText> {
                               ),
                             ),
                           ),
-                        EditableText(
-                          textAlign: controller.textAlign,
-                          controller: controller._editable,
-                          focusNode: controller._node,
-                          autofocus: controller.autoFocus,
-                          style: style,
-                          cursorHeight: controller.textSize,
-                          cursorColor: primaryColor,
-                          obscureText: controller.obscureText,
-                          backgroundCursorColor: primaryColor,
-                          onChanged: controller._handleEditingChange,
-                          inputFormatters: controller.formatter,
-                        ),
+                        if (controller.enabled)
+                          EditableText(
+                            textAlign: controller.textAlign,
+                            controller: controller._editable,
+                            focusNode: controller._node,
+                            autofocus: controller.autoFocus,
+                            style: style,
+                            cursorHeight: controller.textSize,
+                            cursorColor: primaryColor,
+                            obscureText: controller.obscureText,
+                            backgroundCursorColor: primaryColor,
+                            onChanged: controller._handleEditingChange,
+                            inputFormatters: controller.formatter,
+                          ),
                       ],
                     ),
                   ),
@@ -308,7 +310,6 @@ class _Drawable extends StatelessWidget {
           inactive: Colors.grey,
         );
     final drawable = icon.detect(focused);
-    print("${color.detect(focused)}");
     return Container(
       margin: padding,
       width: size,

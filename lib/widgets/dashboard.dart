@@ -7,6 +7,7 @@ import '../utils/configurations/size_config.dart';
 import 'image_button.dart';
 
 typedef SectionBuilder = Widget Function(SizeConfig config);
+typedef DashboardCallback = Function(VoidCallback fn);
 
 class Dashboard extends StatelessWidget {
   final DeviceConfig config;
@@ -306,6 +307,7 @@ class DashboardBody extends StatelessWidget {
 
 class DashboardReport extends StatelessWidget {
   final Color? background;
+
   final double width;
   final SectionBuilder builder;
 
@@ -353,7 +355,9 @@ class _SectionState extends State<_Section> {
   Widget build(BuildContext context) {
     return _WidgetWrapper(
       wrapper: (Size size) {
-        config = SizeConfig.of(context, size: size);
+        setState(() {
+          config = SizeConfig.of(context, size: size);
+        });
       },
       child: Container(
         width: widget.width,
